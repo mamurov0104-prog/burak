@@ -4,16 +4,21 @@
   "description": "this is project backend",
   "main": "src/server.ts",
   "scripts": {
-    "start":"ts-node src/server.ts",
-    "start:dev":"nodemon --exec ts-node src/server.ts",
-    "build":"tsc",
-    "train":"train.js",
+    "start": "ts-node src/server.ts",
+    "start:dev": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "train": "nodemon --exec ts-node src/train.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert",
   "license": "ISC",
   "dependencies": {
-    "moment": "^2.30.1"
+    "@types/node": "^25.0.8",
+    "dotenv": "^16.0.0",
+    "moment": "^2.30.1",
+    "mongodb": "^3.2.6",
+    "mongoose": "^6.2.9",
+    "save-dev": "^0.0.1-security"
   },
   "devDependencies": {
     "nodemon": "^3.1.11",
