@@ -1,7 +1,7 @@
 import mongoose, {Schema} from "mongoose";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 
-const memberSchema = new Schema({
+const memberSchema = new Schema({ // classdan object yasash
     memberType:{
         type:String,
         enum: MemberType,
@@ -46,3 +46,5 @@ const memberSchema = new Schema({
     }
 },{timestamps:true}//updated at and created at
 );
+
+export default mongoose.model('Member', memberSchema);

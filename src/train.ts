@@ -1,25 +1,29 @@
+function majorityElement(arr: number[]): number {
+  let maxCount: number = 0;     // eng katta takrorlanish soni
+  let result: number = arr[0]; // javob bo‘ladigan raqam
 
+  // tashqi loop — har bir elementni tekshirish uchu  kerek
+  for (let i: number = 0; i < arr.length; i++) {
+    let count: number = 0; // hozirgi element necha marta borligini sanaymiz
 
-function getPositive1(arr: number[]): string {
-    // Natija saqlanadigan bo‘sh string yaratan,nkj
-    let result: string = "";
-
-    // Arrayning har bir elementini qolga olish kerak bu yerda 
-    for (let i = 0; i < arr.length; i++) {
-        let num: number = arr[i]; //qolga olingan element manshu hisobkkandi
-
-        // Agar element musbat bo‘lsa, uni stringga aylantirib natijaga qo‘shamiz
-        if (num > 0) {
-            result += num.toString();
-        }
+    // ichki loop — shu elementni yana tekshiradi
+    for (let j: number = 0; j < arr.length; j++) {
+      if (arr[i] === arr[j]) {
+        count++; // agar teng bo‘lsa, +1
+      }
     }
 
-   
-    return result;
+    // agar hozirgi element ko‘proq chiqsa
+    if (count > maxCount) {
+      maxCount = count;
+      result = arr[i];
+    }
+  }
+
+  return result;
 }
 
 
-const numbers: number[] = [1, -4, 2];
-const positiveString: string = getPositive1(numbers);
+console.log(majorityElement([1, 2, 3, 4, 5, 4, 3, 4])); 
+console.log(majorityElement([11, 2, 11, 4, 11, 4, 3,5 ,2,2,2,2,2,2,2,2,2,2,2,4])); 
 
-console.log("Musbat sonlar string ko‘rinishda:", positiveString); // "12"
