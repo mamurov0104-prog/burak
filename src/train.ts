@@ -4,7 +4,7 @@ Project Standards:
 -Naming standards :
     func,method,variables - camelCase  goHome
     class - Pascal                     MemberService
-    folder - Kebab
+    folder,file - Kebab
     css - snake_Case
 -Error handling 
 */
