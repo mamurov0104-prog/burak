@@ -7,6 +7,11 @@ const memberSchema = new Schema({ // classdan object yasash
         enum: MemberType,
         default: MemberType.USER
     },
+    //  memberType: {
+    //   type: String,
+    //   enum: Object.values(MemberType), 
+    //   default: MemberType.USER,         
+    // },
     memberStatus:{
         type:String,
         enum:MemberStatus,
