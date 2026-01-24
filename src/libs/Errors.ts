@@ -5,7 +5,7 @@ export enum HttpCode{
     BAD_REQUEST = 400,
     UNAUTHORIZED = 401,
     FORBIDDEN = 403,
-    NOT_FOUN = 404,
+    NOT_FOUND = 404,
     INTERNAL_SERVER_ERROR = 500,
 
 }
@@ -15,6 +15,10 @@ export enum Message {
     NO_DATA_FOUND = "no data is found!",
     CREATED_FAILED = "created is failed!",
     UPDATED_FAILED = "update is failed!",
+
+    USED_NICK_PHONE = "You are inserting already used phone number!",
+    NO_MEMBER_NICK = "No member with that member nickname!",
+    WRONG_PASSWORD = "Wrong password , please try again!",
 }
 
 class Errors extends Error{
