@@ -1,35 +1,18 @@
-function findLongestWord(str: string): string {
-    // stringni  arrayga aylantirish
-    const words: string[] = str.split(' ');
+function countVowels(str: string): number {
+    // barcha unli harflar ro'yxati
+    const vowels = "aeiouAEIOU";
+    let count = 0;
 
-    // eng uzun so'zni topib olsih avval bitta ozgaruvchi olib boldik
-    let longestWord: string = "";
-
-    // har doimgidek ha bitta sozni qolga olish kerak in/of index va value uchun edi !
-    for (let word of words) {
-        if (word.length > longestWord.length) {
-            longestWord = word; // agar so'z uzunroq bo'lsa yangilaymiz
+    for (let char of str) {
+        if (vowels.includes(char)) {
+            count++;
         }
     }
 
-    return longestWord;
+    return count;
 }
 
-
-console.log(findLongestWord("bugun havo juda sovuq ammo tabiatimiz musaffo osmon ostida yalt etib yonib turgn quyoshdek tuyilmoqda , sog' bo'las!")); 
-
-/*
-Project Standards:
--Logging standards
--Naming standards :
-    func,method,variables - camelCase  goHome
-    class - Pascal                     MemberService
-    folder,file - Kebab
-    css - snake_Case
--Error handling 
-*/
-/*
-Traditionl api
-rest api
-graphql api
-*/
+// Test
+console.log(countVowels("hojayin"));
+console.log(countVowels("fergana is beautiful")); 
+console.log(countVowels("TypeScriptni ozgarnish")); 

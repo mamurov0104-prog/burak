@@ -53,7 +53,7 @@ if(!member) throw new Errors(HttpCode.NOT_FOUND,Message.NO_MEMBER_NICK);
 // const isMatch = input.memberPassword === member.memberPassword;
 // console.log("isMatch:", isMatch);
 const isMatch = await bcrypt.compare(
-    input.memberPassword, // biz kiritfan password
+    input.memberPassword, // biz kiritgan password
     member.memberPassword);// database dan kelgan yangi string
 if(!isMatch){
     throw new Errors(HttpCode.UNAUTHORIZED,Message.WRONG_PASSWORD);}
