@@ -1,3 +1,4 @@
+console.log("SERVER.TS LOADED!")
 import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
@@ -8,6 +9,8 @@ console.log("MongoDb connection succeed");
 const PORT = process.env.PORT ?? 3003;
 app.listen(PORT,function(){
   console.log(`The server is running successfully on ${PORT}!`)
+  console.log(`Admin project on http://localhost:${PORT}/admin \n`)
+
 })
 })
 .catch(err=>console.log("ERROR on connection MongoDb", err));
