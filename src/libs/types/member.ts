@@ -1,3 +1,5 @@
+console.log(" MEMBER INTERFACE LOADED");
+
 import { MemberStatus, MemberType } from "../enums/member.enum";
 import {ObjectId} from "mongoose"
 export interface Member{

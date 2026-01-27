@@ -5,6 +5,7 @@ import MemberService from "../models/Member.service";
 import { MemberInput , LoginInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
 
+const memberService = new MemberService();
 const restaurantController:T={};
 
 restaurantController.goHome=(req:Request,res:Response)=>{
@@ -34,27 +35,7 @@ restaurantController.getLogin=(req:Request,res:Response)=>{
     }
 
 }
-// --------------------------- post ------------------
 
-
-restaurantController.processLogin = async(req:Request,res:Response)=>{
-
-    try{
-     console.log("Coming processLogin!", req.body);
-      const input: LoginInput = req.body;
-      const memberService = new MemberService();
-      const result = await memberService.processLogin(input);
-     res.send(result);
-
-
-    }catch(err){
-      console.log("Error, processLogin :",err);
-      res.send(err);
-    }
-
-}
-
-// ------------------- post --------------------
 
 restaurantController.getSignup=(req:Request,res:Response)=>{
 
@@ -68,6 +49,44 @@ restaurantController.getSignup=(req:Request,res:Response)=>{
     }
 
 }
+
+// ------------------------------------------------------- < login POST started  > --------------------------------------------
+
+restaurantController.processLogin = async(req:Request,res:Response)=>{
+
+    try{
+     console.log("Coming processLogin!", req.body); // req.body JSON object bo‘lishi kerak sababi :
+     /*
+     sabibi biz kiritgan interfaca va 
+     Agar siz bodyni JSON formatida yubormasangak:
+     req.body.memberNick undefined bo‘ladi
+     processLogin ishlamaydi
+     Natijada biz “user not found” yoki “password undefined” kabi
+      xatolar olamiz
+     */
+      const input: LoginInput = req.body;
+      /*
+      Bu ma’lumotlar req.body orqali controllerga keladi :
+            {"memberNick": "restaurant1",
+            "memberPassword": "123456"}
+                                  
+      */
+      const result = await memberService.processLogin(input);
+      /*member service modeldan hosil qilgan opjectimizni processLogin metodiga argument sifatida 
+      pass qilyabmiz va u member.sevice ketib  */
+     res.send(result);
+
+
+    }catch(err){
+      console.log("Error, processLogin :",err);
+      res.send(err);
+    }
+
+}
+
+// ------------------------------------------------------- < login POST finished  > --------------------------------------------
+
+
 restaurantController.processSignup= async (req:Request,res:Response)=>{
 
     try{
@@ -76,7 +95,7 @@ restaurantController.processSignup= async (req:Request,res:Response)=>{
 
       const newMember:MemberInput = req.body;
       newMember.memberType = MemberType.RESTAURANT;
-     const memberService = new MemberService();
+    //  const memberService = new MemberService();
      const result = await memberService.processSignup(newMember);
 
      res.send("process signUp page");

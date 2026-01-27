@@ -1,43 +1,63 @@
+console.log(" MEMBER CONTROLLER LOADED");
+
 import { Request,Response} from "express";
 import {T} from "../libs/types/common";
+import MemberService from "../models/Member.service";
+import { MemberInput , LoginInput } from "../libs/types/member";
+import Errors from "../libs/Errors";
+// import { MemberType } from "../libs/enums/member.enum";
+// import { json } from "node:stream/consumers";
+
+const memberService = new MemberService();
+ 
 const memberController:T={};
-// for React --------
-
-// memberController.goHome=(req:Request,res:Response)=>{
-
-//     try{
-//      res.send("Home page");
-
-//     }catch(err){
-//       console.log("Error, goHome :",err);
-//     }
-
-// }
 
 
+// ------------------------------------------------------- < login POST started  > --------------------------------------------
 
-// memberController.getLogin=(req:Request,res:Response)=>{
+memberController.login = async(req:Request,res:Response)=>{
 
-//     try{
-//      res.send("login page");
+    try{
+     console.log("Coming Login!", req.body); 
+     
+      const input: LoginInput = req.body,
+    //   memberService = new MemberService(),
+      result = await memberService.login(input);
+     
+     res.json({member: result});
 
-//     }catch(err){
-//       console.log("Error, goLogin :",err);
-//     }
 
-// }
+    }catch(err){
+      console.log("Error, Login :",err);
+      if(err instanceof Errors) res.status(err.code).json(err)
+        else res.status(Errors.standard.code).json(Errors.standard);
+    //   res.json({});
+    }
+
+}
+
+// ------------------------------------------------------- < login POST finished  > --------------------------------------------
 
 
-// memberController.getSignup=(req:Request,res:Response)=>{
+memberController.signup = async (req:Request,res:Response)=>{
 
-//     try{
-//      res.send("signUp page");
+    try{
+     console.log("Coming  SignUp Page!");
+     console.log("Body :", req.body);
 
-//     }catch(err){
-//       console.log("Error, signUp :",err);
-//     }
+      const input:MemberInput = req.body,
+    //   newMember.memberType = MemberType.RESTAURANT;
+    //  memberService = new MemberService(),
+    result : any = await memberService.signup(input);
+    //  const result : Member = await memberService.signup(input);
 
-// }
+     res.json({member: result});
 
+    }catch(err){
+      console.log("Error, signUp :",err);
+    //   res.json({})
+    }
+
+}
 
 export default memberController;
