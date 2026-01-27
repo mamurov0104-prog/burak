@@ -1,18 +1,23 @@
-function countVowels(str: string): number {
-    // barcha unli harflar ro'yxati
-    const vowels = "aeiouAEIOU";
-    let count = 0;
+function reverseSentence(str: string): string {
+  // Kirib kelgan stringni bo'sh joy (" ") bo‘yicha bo‘lib,
+  // so‘zlardan iborat array ga aylantiramiz
+  return str
+    .split(" ")
 
-    for (let char of str) {
-        if (vowels.includes(char)) {
-            count++;
-        }
-    }
+    // Har bir so‘z ustida alohida ishlash uchun map ishlatamiz
+    .map((word: string) =>
 
-    return count;
+      // So‘zni harflarga ajratamiz → array
+      // Arrayni teskari qilamiz (reverse)
+      // Yana stringga yig‘amiz (join)
+      word.split("").reverse().join("")
+    )
+
+    // Teskari qilingan so‘zlarni yana bo‘sh joy bilan
+    // bitta stringga birlashtiramiz
+    .join(" ");
 }
+console.log(reverseSentence("Bugun hafta kunlaridan dushanba !"));
+console.log(reverseSentence("Mening ismim Hojiakbar"));
 
-// Test
-console.log(countVowels("hojayin"));
-console.log(countVowels("fergana is beautiful")); 
-console.log(countVowels("TypeScriptni ozgarnish")); 
+
