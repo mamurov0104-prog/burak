@@ -4,7 +4,7 @@ import {T} from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput , LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-import { Message } from "../libs/Errors";
+import Errors, { Message } from "../libs/Errors";
 const memberService = new MemberService();
 const restaurantController:T={};
 
@@ -17,6 +17,8 @@ restaurantController.goHome=(req:Request,res:Response)=>{
      // Logon , service model , ...
     }catch(err){
       console.log("Error, goHome :",err);
+      res.redirect("/admin")
+
     }
 
 }
@@ -34,6 +36,8 @@ restaurantController.getLogin=(req:Request,res:Response)=>{
 
     }catch(err){
       console.log("Error, goLogin :",err);
+      res.redirect("/admin")
+
     }
 
 }
@@ -50,6 +54,7 @@ restaurantController.getSignup=(req:Request,res:Response)=>{
 
     }catch(err){
       console.log("Error, signUp :",err);
+      res.redirect("/admin")
     }
 
 }
@@ -80,6 +85,10 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
 
     }catch(err){
       console.log("Error, process signUp :",err);
+      
+        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+       res.send(`<script>alert("${message}; window.location.replace('admin/signup')")</script>`);
+
     }
 
 }
@@ -112,18 +121,47 @@ restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
         req.session.member = result;
         req.session.save(function(){
         res.send(result);
+       
+
         });
     //  res.send(result);
 
 
     }catch(err){
       console.log("Error, processLogin :",err);
-      res.send(err);
+       const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+       res.send(`<script>alert("${message}"); window.location.replace('admin/login')</script>`);
     }
 
 }
 
 // ------------------------------------------------------- < login POST finished  > --------------------------------------------
+
+// ------------------------------------------------------- < logOut GET started  > --------------------------------------------
+
+
+restaurantController.logout = async(
+  req:AdminRequest,
+  res:Response)=>{
+    try{
+     console.log("Coming LogOut!");
+    req.session.destroy(function(){
+    res.redirect("/admin")
+    });
+
+    }catch(err){
+      console.log("Error, logout :",err);
+      res.send(err);
+    }
+
+}
+
+
+
+// ------------------------------------------------------- < logOut GET finished  > --------------------------------------------
+
+
+
 
 // ----------------------  test  -----------------------------------
 
