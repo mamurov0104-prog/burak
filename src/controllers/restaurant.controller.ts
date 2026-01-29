@@ -2,7 +2,7 @@ console.log(" RESTAURANT CONTROLLER LOADED");
 import { Request,Response} from "express";
 import {T} from "../libs/types/common";
 import MemberService from "../models/Member.service";
-import { MemberInput , LoginInput } from "../libs/types/member";
+import { MemberInput , LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
 
 const memberService = new MemberService();
@@ -56,7 +56,7 @@ restaurantController.getSignup=(req:Request,res:Response)=>{
 
 // ------------------------------------------------------- < login POST started  > --------------------------------------------
 
-restaurantController.processLogin = async(req:Request,res:Response)=>{
+restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
 
     try{
      console.log("Coming processLogin!", req.body); // req.body JSON object bo‘lishi kerak sababi :
@@ -78,7 +78,12 @@ restaurantController.processLogin = async(req:Request,res:Response)=>{
       const result = await memberService.processLogin(input);
       /*member service modeldan hosil qilgan opjectimizni processLogin metodiga argument sifatida 
       pass qilyabmiz va u member.sevice ketib  */
-     res.send(result);
+      
+        req.session.member = result;
+        req.session.save(function(){
+        res.send(result);
+        });
+    //  res.send(result);
 
 
     }catch(err){
@@ -91,7 +96,7 @@ restaurantController.processLogin = async(req:Request,res:Response)=>{
 // ------------------------------------------------------- < login POST finished  > --------------------------------------------
 
 
-restaurantController.processSignup= async (req:Request,res:Response)=>{
+restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
 
     try{
      console.log("Coming process SignUp Page!");
@@ -101,8 +106,17 @@ restaurantController.processSignup= async (req:Request,res:Response)=>{
       newMember.memberType = MemberType.RESTAURANT;
     //  const memberService = new MemberService();
      const result = await memberService.processSignup(newMember);
+        // Sessions Authentication
+        req.session.member = result;
+        req.session.save(function(){
+        res.send(result);
+        });
+         // resultga tenglaguncha vaqt ketadi yani
+        //bzning frontendimizga (postmanga) borib cookies ni ichiga 
+        // stickni joylab keladi , keyin sessions collectionimizga manabu
+        //  result data(memberdata)ni borib saqlaydi , shuning uchun har ikkala process
+        //  amalga oshishi uchun 
 
-     res.send("process signUp page");
 
     }catch(err){
       console.log("Error, process signUp :",err);
