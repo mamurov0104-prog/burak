@@ -1,6 +1,10 @@
 import {T} from "../libs/types/common";
 import Errors from "../libs/Errors";
 import { Request,Response} from "express";
+import ProductService from "../models/Product.service";
+import { AdminRequest } from "../libs/types/member";
+const productService = new ProductService();
+
 
 const productController:T={};
 
@@ -10,7 +14,9 @@ const productController:T={};
         productController.getAllProducts = async (req:Request,res:Response)=>{
 
             try{
+
             console.log("Coming  product Page!");
+        
 
            res.render("products")
             }catch(err){

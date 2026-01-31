@@ -1,5 +1,5 @@
 console.log(" RESTAURANT CONTROLLER LOADED");
-import { Request,Response} from "express";
+import { Request,Response,NextFunction} from "express";
 import {T} from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput , LoginInput, AdminRequest } from "../libs/types/member";
@@ -196,6 +196,24 @@ else res.send(`<script>alert("${Message.NOT_AUTHONTICATED}")</script>`);
       res.send(err);
     }
 
+}
+// ------------------------------------------------ verify ----------------------------
+
+restaurantController.verifyRestaurant = (
+  req:AdminRequest,
+  res:Response,
+  next: NextFunction 
+) =>{
+
+    
+    if(req.session?.member?.memberType === MemberType.RESTAURANT){
+      req.member = req.session.member;
+      next();
+    }
+    else{
+      const message = Message.NOT_AUTHONTICATED;
+     res.send(`<script>alert("${Message.NOT_AUTHONTICATED}"); window.location.replace('/admin/*login')</script>`)
+    }
 }
 
 export default restaurantController;
