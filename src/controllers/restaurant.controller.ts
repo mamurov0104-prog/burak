@@ -212,7 +212,7 @@ restaurantController.verifyRestaurant = (
     }
     else{
       const message = Message.NOT_AUTHONTICATED;
-     res.send(`<script>alert("${Message.NOT_AUTHONTICATED}"); window.location.replace('/admin/*login')</script>`)
+     res.send(`<script>alert("${Message.NOT_AUTHONTICATED}"); window.location.replace('/admin/login')</script>`)
     }
 }
 

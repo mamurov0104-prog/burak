@@ -37,7 +37,7 @@ const productController:T={};
 
             try{
             console.log("Coming  createNewProduct Page!");
-
+             res.send("Done! ")
 
             }catch(err){
             

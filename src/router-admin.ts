@@ -6,6 +6,7 @@ import  express from "express";
 const routerAdmin = express.Router();
 import restaurantController from "./controllers/restaurant.controller";
 import productController from "./controllers/product.controller";
+import makeUploader  from "./libs/utils/uploader";
  /*Restaurant Endpoints */
 routerAdmin.get('/', restaurantController.goHome);
 
@@ -19,7 +20,9 @@ login degan API imizga metodi post bolgan request kelganda  u
 
 routerAdmin
 .get('/signup', restaurantController.getSignup)
-.post('/signup', restaurantController.processSignup)
+.post('/signup',
+    makeUploader("members").single("memberImage"),
+    restaurantController.processSignup)
 /*
 sign up degab API imizga metodi post bolgan request kelganda  u
  restaurantController objectning processSignup metodini chaqiradi (ishlatadi)
@@ -36,9 +39,17 @@ routerAdmin.get('/check-me', restaurantController.checkAuthSession);
 
 /*Product Endpoints */
 
-routerAdmin.get('/product/all', restaurantController.verifyRestaurant , productController.getAllProducts)
-routerAdmin.post('/product/create', productController.createNewProduct)
-routerAdmin.post('/product/:id', productController.updateChoseProduct)
+routerAdmin.get('/product/all', 
+    restaurantController.verifyRestaurant ,
+    productController.getAllProducts)
+routerAdmin.post('/product/create',
+    restaurantController.verifyRestaurant ,
+    // uploadProductImage.single('productImage'),
+    makeUploader("products").single("productImage"),
+    productController.createNewProduct)
+routerAdmin.post('/product/:id', 
+    restaurantController.verifyRestaurant ,
+    productController.updateChoseProduct)
 
 /*User Endpoints*/
 
