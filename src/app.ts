@@ -11,7 +11,7 @@ import ConnectMongoDB from "connect-mongodb-session";
 const MongoDBStore = ConnectMongoDB(session);
 const store = new MongoDBStore({
     uri:String(process.env.MONGO_URL),
-    collection: "session"
+    collection: "sessions"
 })
 // -- ENTRANCE --
 const app = express();
@@ -33,7 +33,7 @@ app.use(
         resave:true,
         saveUninitialized:true,
     })
-
+// req+session / req.session + member 
 
 )
 // -- VIEWS --

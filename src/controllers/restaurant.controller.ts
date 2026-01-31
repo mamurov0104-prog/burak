@@ -62,16 +62,31 @@ restaurantController.getSignup=(req:Request,res:Response)=>{
 // -------------------------
 
 restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
+    /*Controllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
+    req:AdminbRequest va res:response (typeni ozimiz belgilab olganmiz bularni )
+
+    try catch error handling standardidan foydalandik maqsad errorni qolga 
+    olish agar error bolsa
+    */
 
     try{
      console.log("Coming process SignUp Page!");
      console.log("Body :", req.body);
 
-      const newMember:MemberInput = req.body;
-      newMember.memberType = MemberType.RESTAURANT;
-    //  const memberService = new MemberService();
+      const newMember:MemberInput = req.body;// request ichida kelyatgan
+      //  bodyni yangi newMember degankonstantaga tenglab oldik va uniy 
+      // type MemberInputga tenf
+      newMember.memberType = MemberType.RESTAURANT; // hamda osha newMember konstantamizni 
+    //  ichidagi memberTypeni MemberType enum ichidagi Restaurant degan qiymat bn boyitdik
      const result = await memberService.processSignup(newMember);
-        // Sessions Authentication
+          /*
+          Va keyingi qatorda, memberService objectini processSignup methodini chaqirib
+      unga newMember objectini argument sifatida tashladik. Va uni javobini kutib
+      (await) natijani result konstantasiga saqladik
+          */
+
+      /* Hamda yakunda o’sha result objectimizni clientga jo’natib yubordik (yani shu data
+      // bn clientga javob berdik)*/
         req.session.member = result;
         req.session.save(function(){
         res.send(result);
@@ -96,19 +111,19 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
 // ------------------------------ < login POST started  > --------------------------------------------
 
 restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
-
+    /*Kontrollerimiz asinxron methotda shakillantirilgan. Buni 2 ta parametri bor ular
+    req (request) va res (response), type larini o’zimiz biriktirib ketganmiz (type
+    aytilmasa ham bo’ladi) */
     try{
-     console.log("Coming processLogin!", req.body); // req.body JSON object bo‘lishi kerak sababi :
-     /*
-     sabibi biz kiritgan interfaca va 
-     Agar siz bodyni JSON formatida yubormasangak:
-     req.body.memberNick undefined bo‘ladi
-     processLogin ishlamaydi
-     Natijada biz “user not found” yoki “password undefined” kabi
-      xatolar olamiz
-     */
+      /*Keyin try hamda catch blogidan foydalandik, buning eng muhum sababi - error
+    handling (xatolarni boshqarish, ushlash) uchun */
+     console.log("Coming processLogin!", req.body); 
+     /*Aynan shu kantrollerga yetib kelganligini bilish maqsadida o’zimiz 
+     uchun log qoldirdik. */
+     
       const input: LoginInput = req.body;
-      /*
+      /* frontendan kelyatgan data (req.body) ni inputga tenglab oldik va 
+      uning typeni biz LoginInput deb belgilab oldik
       Bu ma’lumotlar req.body orqali controllerga keladi :
             {"memberNick": "restaurant1",
             "memberPassword": "123456"}

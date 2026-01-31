@@ -59,38 +59,64 @@ class MemberService{
     // ---------------------------- < SPA FINISHED > ----------------------------
 
     public async processSignup(input:MemberInput): Promise<any> {
-    // comment ga olingan va commentdan chiqsa ishlaydi !!!
-    
+            /*public asinxron processSignup methodini MemberInput typedagi input degan
+    parametri bor va u asinxron bo’lganligi uchun bizga typypi Member type bolgan Promiseda
+    malumot qaytaradi */
            const exist = await this.memberModel
        .findOne({memberType:MemberType.RESTAURANT})
        .exec();
+            /* member skima modelimizni (memberModel) ichidan findOne statik methodini
+        chaqirib unga bitta object argument berdik, va query ni yakunlash uchun exec()
+        methodini chaqirdik. Hamda bu method javobini kutib, undan chiqqan natijani
+        exist konstantasiga saqladik */
        console.log("exist:",exist);
        if(exist){
             throw new Errors(HttpCode.BAD_REQUEST,Message.CREATED_FAILED);
+            /*Keyingi qatorda, agar ana shu exist bo’ladigan bo’lsa o’zimiz xatolik
+             hosil qildik. U xato o’zimiz tuzib olgan maxsus code va message (habar) lardan iborat. */
 
        };
        console.log("memberPassword before",input.memberPassword);
        const salt = await bcrypt.genSalt();
+       /*
+            Agar exist bo’lmaydigan bosa mantig’imiz keyingi qatorga o’tadi. Biz bcrypt
+        degan external package (tashqi paket) o’rnatdik hamda shu bcrypt objecti ichidan
+        genSalt() degan methodni chaqirdik va uni javobini kutib, salt degan konstantaga
+        saqladik.
+       */
        input.memberPassword = await bcrypt.hash(input.memberPassword , salt);
+            /*Hamda, o’sha bcrypt packagemiz ichidan hash() methodini chaqirib unga 2 ta
+        argument berdik. Birinchi argumenti input parametri ichidagi memberPassword
+        va ikkinchi argument esa yuqorida hosil qilgan salt konstantamizning qiymati
+        bo’ldi. Va uni javobini kutib inputni ichidagi memberPassword ga tengladik. */
        console.log("memberPassword after",input.memberPassword);
 
         try{
+                /*  Va biz yana try catch blogidan foydalandik - errorlarni yaxshi handle qilish uchun.
+        Try blogi ichida, member skima model (memberModel) ichidan create() degan
+        static methodni chaqirib unga inputni argument sifatida berdik va javobini kutib
+        result degan konstantaga saqladik*/
         const result = await this.memberModel.create(input);
-        // const tempResult = new this.memberModel(input);
-        // const result = await tempResult.save();
+   
 
-        result.memberPassword='';
-        return result;
-    //    console.log("Passed here !")
+        result.memberPassword='';// Hamda ana shu result ni memberPasswordini bo’sh stringa tenglab qoydik
+        return result; // Oxirida esa o’sha result ni qaytarib yubordik
         }catch(err){
             throw new Errors(HttpCode.BAD_REQUEST,Message.CREATED_FAILED);
-        //    console.log("Error Errror Error", err);
+            /*Agar try blogi ichida qandaydur xatolik yuzaga kelsa uni catch qismida 
+            ushlab olib o’zimiz yasagan error yani xatolikni qaytardik. */
         }
         
 }
 // ------------------------------------------------------- < login started  > --------------------------------------------
 public async processLogin(input:LoginInput):Promise<any>{
+    /* public asinxron processLogin methodini LoginInput typedagi input degan
+parametri bor va u asinxron bo’lganligi uchun bizga Promiseda, yani Member typeda
+malumot qaytaradi. */
 const member = await this.memberModel
+/*member skima modelimizni (memberModel) ichidan findOne statik methodini
+chaqirib unga 2 ta  object argument berdik, va query ni yakunlash uchun exec()
+methodini chaqirdik. */
 .findOne( // databasedan foydalanuvchini qidirish 
     {memberNick:input.memberNick},  // nickname bo‘yicha qidiramiz
     {_id:1,memberNick:1,memberPassword:1}) // faqat kerakli fieldlar
@@ -116,9 +142,9 @@ if(!isMatch){ // Agar password mos kelmasa: ushbu errorni qaytaradi
     olish uchun ID bo‘yicha yana query qilamiz.
     Natija controllerga qaytadi 
     va res.send(result) orqali frontendga yuboriladi. */
-const result = await this.memberModel.findById(member._id).exec();
-    console.log("result:",result);
-return result;
+// const result = await this.memberModel.findById(member._id).exec();
+    // console.log("result:",result);
+return  await this.memberModel.findById(member._id).exec();
 
 }
 // ------------------------------------------------------- < login finished  > --------------------------------------------
