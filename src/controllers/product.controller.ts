@@ -26,9 +26,10 @@ const productController:T={};
             try{
 
             console.log("Coming  product Page!");
-        
+            const data = await productService.getAllProducts();
+            console.log("DATA: ", data );
 
-           res.render("products")
+           res.render("products" , {products : data})
             }catch(err){
             
             console.log("Error, getAllProduct :",err);

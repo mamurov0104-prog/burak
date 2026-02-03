@@ -12,6 +12,21 @@ class ProductService{
 
 /* >-----< SPA >-----< */
 /* >-----< BSSR  started>-----< */
+
+/* >-----< getAllProducts  started>-----< */
+
+public async getAllProducts(): Promise<any>{ // Promise<Product>
+
+// string => object id 
+const result = await this.productModel
+.find()
+.exec();
+if(!result) throw new Errors(HttpCode.NOT_FOUND , Message.NO_DATA_FOUND);
+console.log("result:" , result);
+return result;
+
+}
+/* >-----< getAllProducts  finished>-----< */
 /* >-----< CreateNewProduct  started>-----< */
 
 public async createNewProduct(input:ProductInput): Promise<any>{ // Promise<Product>
@@ -25,7 +40,7 @@ throw new Errors(HttpCode.BAD_REQUEST , Message.CREATED_FAILED);
 
 
 }
-/* >-----< CreateNewProduct  finished>-----< */
+/* >-----< CreateNewProduct   finished>-----< */
 /* >-----< updateChosenProduct  started>-----< */
 
 public async updateChosenProduct(id:string , input:ProductUpdateInput): Promise<any>{ // Promise<Product>

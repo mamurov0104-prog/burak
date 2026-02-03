@@ -6,6 +6,11 @@
             PRODUCT PAGE IS LOADED !
         </h1>
         <div><%=member.memberNick%></div>
+           
+        <% products.map((value,key) => { %>
+            <p><%= value.productName %> - <%= value.productSize %></p>
+         <% } )%>
+
     </div>
 </body>
 
