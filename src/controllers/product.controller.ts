@@ -77,7 +77,7 @@ const productController:T={};
         }
 // ------------------------------------------------------- < createNewProduct post Finished  > --------------------------------------------
 
-// ------------------------------------------------------- < updateChoseProduct post started  > --------------------------------------------
+// ------------------------------------------------------- < updateChosenProduct post started  > --------------------------------------------
 
 
         productController.updateChosenProduct = async (req:Request,res:Response)=>{
@@ -89,7 +89,13 @@ const productController:T={};
     */
             try{
             console.log("Coming  updateChoseProduct Page!");
+            const id = req.params.id;
+            console.log("ID :" , id);
 
+            const result = await productService.updateChosenProduct(id , req.body);
+            // datani ichiga ozgarish bomedi shunga togridan togri req.body beriladi
+           res.status(HttpCode.OK).json({data: result});
+            // res.send(result);
 
             }catch(err){
             
