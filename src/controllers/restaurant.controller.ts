@@ -4,7 +4,8 @@ import {T} from "../libs/types/common";
 import MemberService from "../models/Member.service";
 import { MemberInput , LoginInput, AdminRequest } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
-import Errors, { Message } from "../libs/Errors";
+import Errors, { HttpCode, Message } from "../libs/Errors";
+import { error } from "console";
 const memberService = new MemberService();
 const restaurantController:T={};
 
@@ -72,8 +73,13 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
     try{
      console.log("Coming process SignUp Page!");
      console.log("Body :", req.body);
-
-      const newMember:MemberInput = req.body;// request ichida kelyatgan
+      const file = req.file;
+      if(!file) throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
+      // console.log("file :",file);
+      // throw new Error("Forced Quit");
+      const newMember:MemberInput = req.body;
+      newMember.memberImage = file?.path;
+      // request ichida kelyatgan
       //  bodyni yangi newMember degankonstantaga tenglab oldik va uniy 
       // type MemberInputga tenf
       newMember.memberType = MemberType.RESTAURANT; // hamda osha newMember konstantamizni 

@@ -13,6 +13,12 @@ const productController:T={};
 
         productController.getAllProducts = async (req:Request,res:Response)=>{
 
+              /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
+    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
+
+    try catch error handling standardidan foydalandik maqsad errorni qolga 
+    olish agar error bolsa
+    */
             try{
 
             console.log("Coming  product Page!");
@@ -34,7 +40,12 @@ const productController:T={};
 
 
         productController.createNewProduct = async (req:Request,res:Response)=>{
+      /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
+    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
 
+    try catch error handling standardidan foydalandik maqsad errorni qolga 
+    olish agar error bolsa
+    */
             try{
             console.log("Coming  createNewProduct Page!");
              res.send("Done! ")
@@ -53,8 +64,13 @@ const productController:T={};
 // ------------------------------------------------------- < updateChoseProduct post started  > --------------------------------------------
 
 
-        productController.updateChoseProduct = async (req:Request,res:Response)=>{
+        productController.updateChosenProduct = async (req:Request,res:Response)=>{
+      /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
+    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
 
+    try catch error handling standardidan foydalandik maqsad errorni qolga 
+    olish agar error bolsa
+    */
             try{
             console.log("Coming  updateChoseProduct Page!");
 

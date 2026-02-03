@@ -42,15 +42,31 @@ routerAdmin.get('/check-me', restaurantController.checkAuthSession);
 routerAdmin.get('/product/all', 
     restaurantController.verifyRestaurant ,
     productController.getAllProducts)
+    /*
+product/all degan API imizga metodi get bolgan request kelganda  u
+ restaurantController objectning verifyRestaurant metodi va  productController.getAllProducts ni chaqiradi (ishlatadi)
+*/
 routerAdmin.post('/product/create',
     restaurantController.verifyRestaurant ,
     // uploadProductImage.single('productImage'),
     makeUploader("products").single("productImage"),
+    // makeUploader("products").array("productImages" , 5),
+
     productController.createNewProduct)
+
+       /*
+product/create degan API imizga metodi post bolgan request kelganda  u
+ restaurantController objectning verifyRestaurant metodini va u tasdiqlansa productController objectimi
+ mizning createNewProduct metodini  chaqiradi (ishlatadi)
+*/
 routerAdmin.post('/product/:id', 
     restaurantController.verifyRestaurant ,
-    productController.updateChoseProduct)
-
+    productController.updateChosenProduct)
+      /*
+product/:id degan API imizga metodi post bolgan request kelganda  u
+ restaurantController objectning verifyRestaurant metodini va u tasdiqlansa productController objectimi
+ mizning updatechosenproduct metodini  chaqiradi (ishlatadi)
+*/
 /*User Endpoints*/
 
 
