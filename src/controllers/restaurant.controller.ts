@@ -74,11 +74,11 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
      console.log("Coming process SignUp Page!");
      console.log("Body :", req.body);
       const file = req.file;
+      console.log("file :",file);
       if(!file) throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
-      // console.log("file :",file);
-      // throw new Error("Forced Quit");
+      console.log("file :",file);
       const newMember:MemberInput = req.body;
-      newMember.memberImage = file?.path;
+      newMember.memberImage = file?.path.replace(/\\/g, '');// agar teskasi bolsa togirlab beradi;
       // request ichida kelyatgan
       //  bodyni yangi newMember degankonstantaga tenglab oldik va uniy 
       // type MemberInputga tenf
@@ -95,7 +95,7 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
       // bn clientga javob berdik)*/
         req.session.member = result;
         req.session.save(function(){
-        res.send(result);
+        res.redirect("/admin/product/all");
         });
          // resultga tenglaguncha vaqt ketadi yani
         //bzning frontendimizga (postmanga) borib cookies ni ichiga 
@@ -141,7 +141,9 @@ restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
       
         req.session.member = result;
         req.session.save(function(){
-        res.send(result);
+        // res.send(result);
+        res.redirect("/admin/product/all");
+
        
 
         });

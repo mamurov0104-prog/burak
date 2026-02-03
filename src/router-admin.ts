@@ -49,8 +49,8 @@ product/all degan API imizga metodi get bolgan request kelganda  u
 routerAdmin.post('/product/create',
     restaurantController.verifyRestaurant ,
     // uploadProductImage.single('productImage'),
-    makeUploader("products").single("productImage"),
-    // makeUploader("products").array("productImages" , 5),
+    // makeUploader("products").single("productImage"),
+    makeUploader("products").array("productImages" , 5),
 
     productController.createNewProduct)
 
