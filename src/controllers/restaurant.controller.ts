@@ -216,13 +216,14 @@ restaurantController.updateChosenUser = async(
   res:Response)=>{
     try{
      console.log("Coming updateChosenUser!");
-    req.session.destroy(function(){
-    res.redirect("/admin")
-    });
+    const result = await memberService.updateChosenUser(req.body);
+    res.status(HttpCode.OK).json({data: result})
+    
 
     }catch(err){
       console.log("Error, updateChosenUser :",err);
-      res.send(err);
+     if(err instanceof Errors) res.status(err.code).json(err)
+     else res.status(Errors.standard.code).json(Errors.standard);
     }
 
 }
