@@ -185,6 +185,53 @@ restaurantController.logout = async(
 
 
 
+// ------------------------------------------------------- < getUsers GET started  > --------------------------------------------
+
+
+restaurantController.getUsers = async(
+  req:AdminRequest,
+  res:Response)=>{
+    try{
+     console.log("Coming getUser!");
+    const result = await memberService.getUsers();
+     console.log("result", result);
+
+    res.render("users",{users:result});
+     
+    }catch(err){
+      console.log("Error, getUser :",err);
+      res.redirect("/admin/login");
+    }
+
+}
+
+
+
+// ------------------------------------------------------- < getUser GET finished  > --------------------------------------------
+// ------------------------------------------------------- < updateChosenUser GET started  > --------------------------------------------
+
+
+restaurantController.updateChosenUser = async(
+  req:AdminRequest,
+  res:Response)=>{
+    try{
+     console.log("Coming updateChosenUser!");
+    req.session.destroy(function(){
+    res.redirect("/admin")
+    });
+
+    }catch(err){
+      console.log("Error, updateChosenUser :",err);
+      res.send(err);
+    }
+
+}
+
+
+
+// ------------------------------------------------------- < updateChosenUser GET finished  > --------------------------------------------
+
+
 
 // ----------------------  test  -----------------------------------
 

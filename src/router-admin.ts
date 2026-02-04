@@ -68,7 +68,7 @@ product/:id degan API imizga metodi post bolgan request kelganda  u
  mizning updatechosenproduct metodini  chaqiradi (ishlatadi)
 */
 /*User Endpoints*/
-
+routerAdmin.get("/user/all",restaurantController.verifyRestaurant , restaurantController.getUsers)
 
 export default routerAdmin;
 
