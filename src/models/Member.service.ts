@@ -153,10 +153,28 @@ return  await this.memberModel.findById(member._id).exec();
 // ------------------------------------------------------- < getUsers started  > --------------------------------------------
 
    public async getUsers():Promise<any>{
+     /* Bu yerda SERVICE:
+     * - qaysi userlar olinishi kerak
+     * - qaysi filter ishlatilishi
+     * - qachon error berilishi
+     * ni hal qiladi
+     */
+
    const result = await this.memberModel
    .find({memberType:MemberType.USER})
+   /*
+   Ya’ni MongoDB ga shunday deyilyapti:
+
+    “memberType degan fieldi USER bo‘lganlarni olib kel” aks xolda hamma
+     memberni olib keladi yani adminni ozini ham
+   */
    .exec();
    if(!result) throw new Errors(HttpCode.NOT_FOUND , Message.NO_DATA_FOUND);
+   
+    /**
+     * Agar DB dan hech nima qaytmasa,
+     * Service xato tashlaydi
+     */
    return result;
    }
 
@@ -165,11 +183,47 @@ return  await this.memberModel.findById(member._id).exec();
 // ------------------------------------------------------- < updateChosenUser started  > --------------------------------------------
 
    public async updateChosenUser(input:MemberUpdateInput):Promise<any>{
+    
+    /**
+     * input — controllerdan kelgan data
+     * Bu data frontenddan kelganligi sababli
+     * unga to‘liq ishonib bo‘lmaydi
+     */
+
+    /**
+     * 1️⃣ MongoDB ObjectId formatlash
+     *
+     * Frontend _id ni string qilib yuboradi
+     * MongoDB esa ObjectId format kutadi
+     */
     input._id = shapeIntoMongooseObjectId(input._id);
+    
+    /**
+     * 2️⃣ Userni DB dan topib yangilash
+     *
+     * findByIdAndUpdate:
+     * - birinchi parametr → qaysi hujjat
+     * - ikkinchi parametr → yangi ma’lumotlar
+     * - new: true → yangilangan hujjatni qaytar
+     */
    const result = await this.memberModel
-   .findByIdAndUpdate({_id:input._id},input,{new:true})
+   .findByIdAndUpdate(
+    {_id:input._id} /*Qaysi user yangilanadi? degan savolga javob  yani Frontend _id yuborgan
+                     Biz uni ObjectId ga aylantirdik MongoDB shu _id ga mos hujjatni qidiradi*/
+    ,input, /* Qaysi ma’lumotlar bilan yangilanadi? yani {
+                _id: ObjectId("65fa..."),
+                memberNick: "Ali",
+                memberStatus: "ACTIVE"
+                } */
+    {new:true , runValidators:true})/* Bu option yani “Yangilangan holatni qaytaraman” degandek gap  */
    .exec();
    if(!result) throw new Errors(HttpCode.NOT_MODIFIED , Message.UPDATED_FAILED);
+     /**
+     * 3️⃣ Agar user topilmasa yoki update bo‘lmasa
+     * Service error throw qiladi
+     *
+     * Bu error controller tomonidan tutib olinadi
+     */
    return result;
    }
 

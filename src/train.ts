@@ -1,20 +1,27 @@
-
-function objectToArray(obj: Record<string, any>): any[][] {
-  // Natijani saqlash uchun bo‘sh array hosil qilindi
-  const result: any[][] = [];
-
-  // Object ichidagi har bir key bo‘yicha aylantiriladi
-  for (let key in obj) {
-    // Har bir key va uning qiymatini alohida array qilib qo‘shiladi
-    result.push([key, obj[key]]);
-  }
-
-  // Hosil bo‘lgan arrayni kegin qaytaramia
-  return result;
+// ----- < 
+// Ikkinchi usul > -----
+function objectdanArray(obj: object) {
+  return Object.entries(obj);
 }
 
-// Test
-console.log(objectToArray({ a: 10, b: 20 }));
+console.log(objectdanArray({ a: 10, b: 20 }));
+
+// function objectToArray(obj: Record<string, any>): any[][] {
+//   // Natijani saqlash uchun bo‘sh array hosil qilindi
+//   const result: any[][] = [];
+
+//   // Object ichidagi har bir key bo‘yicha aylantiriladi
+//   for (let key in obj) {
+//     // Har bir key va uning qiymatini alohida array qilib qo‘shiladi
+//     result.push([key, obj[key]]);
+//   }
+
+//   // Hosil bo‘lgan arrayni kegin qaytaramia
+//   return result;
+// }
+
+// // Test
+// console.log(objectToArray({ a: 10, b: 20 }));
 
 
 

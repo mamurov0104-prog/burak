@@ -108,7 +108,7 @@ restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
       console.log("Error, process signUp :",err);
       
         const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-       res.send(`<script>alert("${message}; window.location.replace('admin/signup')")</script>`);
+       res.send(`<script>alert("${message}; window.location.replace('/admin/signup')")</script>`);
 
     }
 
@@ -126,6 +126,7 @@ restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
      console.log("Coming processLogin!", req.body); 
      /*Aynan shu kantrollerga yetib kelganligini bilish maqsadida o’zimiz 
      uchun log qoldirdik. */
+    //  throw new Error("Forced stop ! ")
      
       const input: LoginInput = req.body;
       /* frontendan kelyatgan data (req.body) ni inputga tenglab oldik va 
@@ -153,7 +154,7 @@ restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
     }catch(err){
       console.log("Error, processLogin :",err);
        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-       res.send(`<script>alert("${message}"); window.location.replace('admin/login')</script>`);
+       res.send(`<script>alert("${message}"); window.location.replace('/admin/login')</script>`);
     }
 
 }
@@ -191,14 +192,32 @@ restaurantController.logout = async(
 restaurantController.getUsers = async(
   req:AdminRequest,
   res:Response)=>{
+       /**
+         * Bu controller method HTTP GET /user/all
+         * request kelganda ishga tushadi
+         */
     try{
      console.log("Coming getUser!");
+      /**
+         * Controller Service ga murojaat qiladi
+         * Chunki:
+         * - Controller DB bilan ishlamasligi kerak
+         * - Barcha biznes logika Service da bo‘ladi
+         */
     const result = await memberService.getUsers();
-     console.log("result", result);
 
+     console.log("result", result);
+  /**
+         * Service dan qaytgan tayyor ma’lumot
+         * view (EJS) ga uzatiladi
+         */
     res.render("users",{users:result});
      
     }catch(err){
+        /**
+         * Agar Service xato tashlasa (throw),
+         * Controller uni tutib oladi
+         */
       console.log("Error, getUser :",err);
       res.redirect("/admin/login");
     }
@@ -214,14 +233,44 @@ restaurantController.getUsers = async(
 restaurantController.updateChosenUser = async(
   req:AdminRequest,
   res:Response)=>{
+    
     try{
      console.log("Coming updateChosenUser!");
+     
+        /**
+         * req.body ichida frontenddan kelgan
+         * user ma’lumotlari bo‘ladi
+         *
+         * Misol:
+         * {
+         *   _id: "65f123abc...",
+         *   memberStatus: "ACTIVE",
+         *   memberNick: "Ali"
+         * }
+         */
+
+        /**
+         * Controller bu ma’lumotlarni o‘zi qayta ishlamaydi
+         * va DB ga yozmaydi
+         *
+         * Sababi:
+         * - Controller faqat HTTP layer
+         * - Biznes logika Service da bo‘lishi shart
+         */
     const result = await memberService.updateChosenUser(req.body);
+    /**
+         * Agar Service muvaffaqiyatli natija qaytarsa
+         * controller client ga 200 OK bilan javob beradi
+         */
     res.status(HttpCode.OK).json({data: result})
     
 
     }catch(err){
       console.log("Error, updateChosenUser :",err);
+      /**
+         * Agar Service ichida error throw qilingan bo‘lsa,
+         * controller bu yerda uni tutib oladi
+         */
      if(err instanceof Errors) res.status(err.code).json(err)
      else res.status(Errors.standard.code).json(Errors.standard);
     }
