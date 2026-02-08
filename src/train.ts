@@ -1,10 +1,32 @@
-// ----- < 
-// Ikkinchi usul > -----
-function objectdanArray(obj: object) {
-  return Object.entries(obj);
+/*
+
+Shunday function yozing, u 2 ta parametrgga ega bolib birinchisi object, 
+ikkinchisi string. Agar string parametr objectni propertysi bolsa true bolmasa 
+false qaytarsin. MASALAN: hasProperty({name: "BMW", model: "M3"}, "model") return true; 
+hasProperty({name: "BMW", model: "M3"}, "year") return false.
+ts da yozib ber
+*/
+// obj: object, prop: string → agar prop objda bo'lsa true, aks holda false
+function hasProperty(obj: { [key: string]: any }, prop: string): boolean {
+    // 'in' operatori bilan tekshiramiz
+    return prop in obj;
 }
 
-console.log(objectdanArray({ a: 10, b: 20 }));
+// Testlar
+console.log(hasProperty({ name: "BMW", model: "M3" }, "model")); // true
+console.log(hasProperty({ name: "BMW", model: "M3" }, "year"));  // false
+
+
+// Yoki eski tarzda: obj.hasOwnProperty(prop)
+
+
+// ----- < 
+// Ikkinchi usul > -----
+// function objectdanArray(obj: object) {
+//   return Object.entries(obj);
+// }
+
+// console.log(objectdanArray({ a: 10, b: 20 }));
 
 // function objectToArray(obj: Record<string, any>): any[][] {
 //   // Natijani saqlash uchun bo‘sh array hosil qilindi
