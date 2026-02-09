@@ -40,7 +40,7 @@ function validateSignupForm() {
     .get(0) → DOM element
     .files[0] → tanlangan birinchi file
   */
-  const memberImage = $(".member-image").get(0).files[0]
+  const memberImage = $(".member-image").get(0).files[0].name
     ? $(".member-image").get(0).files[0].name
     : null;
 
@@ -82,13 +82,8 @@ $(function () {
 
       console.log("uploadFile:", uploadFile);
 
-      /*
-        ❗ MUHIM:
-        File object FUNCTION EMAS
-        Shuning uchun uploadFile("type") ❌ XATO
-        To‘g‘risi → uploadFile.type
-      */
-      const fileType = uploadFile.type;
+    
+      const fileType = uploadFile["type"];
 
       // Ruxsat etilgan rasm formatlari
       const validImageType = ["image/jpg", "image/jpeg", "image/png"];
@@ -118,6 +113,7 @@ $(function () {
       $(this).siblings(".upload-name").val(filename);
     }
   });
+  // return true ;
 });
 
 // ----------------------------- kommentli kodim end -------------------------------
