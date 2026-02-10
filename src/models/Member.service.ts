@@ -3,7 +3,7 @@ console.log(" MEMBER SERVICE LOADED");
 import MemberModel from "../schema/Member.model";
 import { LoginInput, Member, MemberInput , MemberUpdateInput} from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
-import { MemberType } from "../libs/enums/member.enum";
+import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import * as bcrypt from "bcryptjs";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 class MemberService{
@@ -37,11 +37,16 @@ class MemberService{
         // Conside member status later
             const member = await this.memberModel
         .findOne( 
-            {memberNick:input.memberNick}, 
-            {_id:1,memberNick:1,memberPassword:1}) 
+            {memberNick:input.memberNick, 
+                memberStatus:{$ne:MemberStatus.DELETE} // delete bolgan bolsa chiqmedi qidiruvda
+            }, 
+            {_id:1,memberNick:1,memberPassword:1,memberStatus:1}) 
         .exec();
 
         if(!member) throw new Errors(HttpCode.NOT_FOUND,Message.NO_MEMBER_NICK);
+        else if (member.memberStatus === MemberStatus.BLOCK){
+            throw new Errors(HttpCode.FORBIDDEN,Message.BLOCKED_USER);
+        }
 
         const isMatch = await bcrypt.compare(
             input.memberPassword,
@@ -191,7 +196,7 @@ return  await this.memberModel.findById(member._id).exec();
      */
 
     /**
-     * 1️⃣ MongoDB ObjectId formatlash
+     * 1 MongoDB ObjectId formatlash
      *
      * Frontend _id ni string qilib yuboradi
      * MongoDB esa ObjectId format kutadi
@@ -199,7 +204,7 @@ return  await this.memberModel.findById(member._id).exec();
     input._id = shapeIntoMongooseObjectId(input._id);
     
     /**
-     * 2️⃣ Userni DB dan topib yangilash
+     * 2 Userni DB dan topib yangilash
      *
      * findByIdAndUpdate:
      * - birinchi parametr → qaysi hujjat
@@ -219,7 +224,7 @@ return  await this.memberModel.findById(member._id).exec();
    .exec();
    if(!result) throw new Errors(HttpCode.NOT_MODIFIED , Message.UPDATED_FAILED);
      /**
-     * 3️⃣ Agar user topilmasa yoki update bo‘lmasa
+     * 3 Agar user topilmasa yoki update bo‘lmasa
      * Service error throw qiladi
      *
      * Bu error controller tomonidan tutib olinadi

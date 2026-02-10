@@ -19,7 +19,8 @@ export enum Message {
     USED_NICK_PHONE = "You are inserting already used phone number!",
     NO_MEMBER_NICK = "No member with that member nickname!",
     WRONG_PASSWORD = "Wrong password , please try again!",
-    NOT_AUTHONTICATED = "You are not authenticated !"
+    NOT_AUTHONTICATED = "You are not authenticated !",
+    BLOCKED_USER = "You have been blocked!"
 }
 
 class Errors extends Error{
