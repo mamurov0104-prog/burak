@@ -3,7 +3,7 @@
 // ==============================================
 
 // Axios kutubxonasi import qilinadi, u HTTP requestlar yuborish va server bilan ma'lumot almashish uchun ishlatiladi
-const { default: axios } = require("axios"); 
+// const { default: axios } = require("axios"); 
 
 // Log chiqarish: fayl frontendda yuklanganini tekshirish uchun
 console.log("Products frontend javascript file");
