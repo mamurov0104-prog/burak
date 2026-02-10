@@ -64,7 +64,7 @@ const productController:T={};
                 console.log("data :" , data);
                 await productService.createNewProduct(data);
 
-                 res.send(`<script>alert("Successful creation !; window.location.replace('admin/product/all')")</script>`);
+                 res.send(`<script>alert("Successful creation !; window.location.replace('/admin/product/all')")</script>`);
 
 
             }catch(err){
