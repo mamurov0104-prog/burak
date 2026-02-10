@@ -1,4 +1,23 @@
 /*
+Shunday function yozing, u string parametrga ega bolsin. String "1+2" holatda
+ pass qilinganda string ichidagi sonlar yigindisini number holatda qaytarsin.
+  MASALAN: calculate("1+3") return 4. */
+
+function calculate(str: string): number {
+  // '+' bo'yicha stringni bo'lib olamiz
+  const numbers = str.split('+').map(Number); // har bir elementni numberga o'tkazamiz
+  // sonlarni yig'indisini hisoblaymiz
+  const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+  return sum;
+}
+
+// Test
+console.log(calculate("1+3")); // Natija: 4
+console.log(calculate("101+102+103")); // Natija: 35
+
+
+
+/*
 
 Shunday function yozing, u 2 ta parametrgga ega bolib birinchisi object, 
 ikkinchisi string. Agar string parametr objectni propertysi bolsa true bolmasa 
@@ -7,14 +26,14 @@ hasProperty({name: "BMW", model: "M3"}, "year") return false.
 ts da yozib ber
 */
 // obj: object, prop: string → agar prop objda bo'lsa true, aks holda false
-function hasProperty(obj: { [key: string]: any }, prop: string): boolean {
-    // 'in' operatori bilan tekshiramiz
-    return prop in obj;
-}
+// function hasProperty(obj: { [key: string]: any }, prop: string): boolean {
+//     // 'in' operatori bilan tekshiramiz
+//     return prop in obj;
+// }
 
-// Testlar
-console.log(hasProperty({ name: "BMW", model: "M3" }, "model")); // true
-console.log(hasProperty({ name: "BMW", model: "M3" }, "year"));  // false
+// // Testlar
+// console.log(hasProperty({ name: "BMW", model: "M3" }, "model")); // true
+// console.log(hasProperty({ name: "BMW", model: "M3" }, "year"));  // false
 
 
 // Yoki eski tarzda: obj.hasOwnProperty(prop)

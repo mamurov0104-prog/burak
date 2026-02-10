@@ -13,10 +13,10 @@ console.log("Signup frontend javascript file");
 function validateSignupForm() {
 
   // jQuery orqali inputlardan qiymatlarni olib olamiz
-  const memberNick = $(".member-nick").val();         // Restaurant nomi
-  const memberPhone = $(".member-phone").val();       // Telefon raqam
-  const memberPassword = $(".member-password").val(); // Parol
-  const confirmPassword = $(".confirm-password").val(); // Parolni qayta kiritish
+  const memberNick = $(".member-nick").val(),
+  memberPhone = $(".member-phone").val(),      // Telefon raqam
+  memberPassword = $(".member-password").val(),
+   confirmPassword = $(".confirm-password").val(); // Parolni qayta kiritish
 
   // Agar birorta input bo‘sh bo‘lsa — formni to‘xtatamiz
   if (
