@@ -1,19 +1,67 @@
+
+
+/**
+ * missingNumber funksiyasi
+  
+ Vazifa:
+ 0 dan n gacha bo‘lgan sonlar orasidan tushib qolgan bitta sonni topadi.
+ Array uzunligi n bo‘lsa, aslida sonlar 0...n oralig‘ida bo‘lishi kerak.
+ 
+  Misol:
+  [3,0,1] → 2
+ */
+
+function missingNumber(arr: number[]): number {
+
+  //  Arrayni o‘sish tartibida saralaymiz
+  // Nega? Chunki index bilan qiymatni solishtiramiz
+  arr.sort((a: number, b: number) => a - b);
+
+  //  Har bir elementni uning indexi bilan solishtiramiz
+  for (let i = 0; i < arr.length; i++) {
+
+    // Agar index va qiymat teng bo‘lmasa,
+    // demak aynan shu index tushib qolgan son
+    if (arr[i] !== i) {
+      return i;
+    }
+  }
+
+  //  Agar loop ichida topilmasa,
+  // demak oxirgi son (n) tushib qolgan
+  return arr.length;
+}
+
+console.log(missingNumber([3, 0, 1])); 
+
+console.log(missingNumber([0, 1])); 
+
+console.log(missingNumber([9,6,4,2,3,5,7,0,1])); 
+
+console.log(missingNumber([0])); 
+
+console.log(missingNumber([1])); 
+
+
+
+
+
 /*
 Shunday function yozing, u string parametrga ega bolsin. String "1+2" holatda
  pass qilinganda string ichidagi sonlar yigindisini number holatda qaytarsin.
   MASALAN: calculate("1+3") return 4. */
 
-function calculate(str: string): number {
-  // '+' bo'yicha stringni bo'lib olamiz
-  const numbers = str.split('+').map(Number); // har bir elementni numberga o'tkazamiz
-  // sonlarni yig'indisini hisoblaymiz
-  const sum = numbers.reduce((acc, curr) => acc + curr, 0);
-  return sum;
-}
+// function calculate(str: string): number {
+//   // '+' bo'yicha stringni bo'lib olamiz
+//   const numbers = str.split('+').map(Number); // har bir elementni numberga o'tkazamiz
+//   // sonlarni yig'indisini hisoblaymiz
+//   const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+//   return sum;
+// }
 
-// Test
-console.log(calculate("1+3")); // Natija: 4
-console.log(calculate("101+102+103")); // Natija: 35
+// // Test
+// console.log(calculate("1+3")); // Natija: 4
+// console.log(calculate("101+102+103")); // Natija: 35
 
 
 
