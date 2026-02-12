@@ -51,6 +51,8 @@ const productController:T={};
     try catch error handling standardidan foydalandik maqsad errorni qolga 
     olish agar error bolsa
     */
+   console.log("CREATE CONTROLLER HIT");
+
             try{
             console.log("Coming  createNewProduct Page!");
             console.log("files", req.files);
@@ -63,15 +65,26 @@ const productController:T={};
                 });
                 console.log("data :" , data);
                 await productService.createNewProduct(data);
-
-                 res.send(`<script>alert("Successful creation !; window.location.replace('/admin/product/all')")</script>`);
+                console.log("Product created successfully");
+                    res.send(`
+                    <script>
+                        alert("Successful creation!");
+                        window.location.replace('/admin/product/all');
+                    </script>
+                    `);
 
 
             }catch(err){
             
             console.log("Error, createNewProduct :",err); 
             const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-                 res.send(`<script>alert(" ${message} !; window.location.replace('/admin/product/all')")</script>`);
+                                res.send(`
+                <script>
+                    alert("${message}!");
+                    window.location.replace('/admin/product/all');
+                </script>
+                `);
+
 
             }
 
