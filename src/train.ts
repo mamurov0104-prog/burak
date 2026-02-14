@@ -1,4 +1,29 @@
 
+/*T-TASK
+
+Shunday function yozing, u sonlardan tashkil topgan 2 ta array qabul qilsin va ikkala 
+\arraydagi sonlarni tartiblab bir arrayda qaytarsin. MASALAN: mergeSortedArrays([0,3,4,31], [4,6,30]) 
+return [0,3,4,4,6,30,31]. */
+
+function mergeSortedArrays(arr1: number[], arr2: number[]): number[] {
+  //  arr1 va arr2 ni birlashtiramiz.
+  // concat() yangi array qaytaradi va original arraylarni o'zgartirmaydi.
+  const mergedArray = arr1.concat(arr2);
+
+  // sort() orqali arrayni tartiblaymiz.
+  // (a, b) => a - b bu compare function.
+  // Agar natija manfiy bo'lsa → a oldinda qoladi
+  // Agar musbat bo'lsa → b oldinga o'tadi
+  // Agar 0 bo'lsa → joyi o'zgarmaydi
+  mergedArray.sort((a, b) => a - b);
+
+  // Tartiblangan arrayni qaytaramiz
+  return mergedArray;
+}
+
+// Misol uchun chaqirish:
+console.log(mergeSortedArrays([0, 3, 4, 31], [4, 6, 30]));
+
 
 /**
  * missingNumber funksiyasi
@@ -8,39 +33,39 @@
  Array uzunligi n bo‘lsa, aslida sonlar 0...n oralig‘ida bo‘lishi kerak.
  
   Misol:
-  [3,0,1] → 2
+  [3,0,1] = 2
  */
 
-function missingNumber(arr: number[]): number {
+// function missingNumber(arr: number[]): number {
 
-  //  Arrayni o‘sish tartibida saralaymiz
-  // Nega? Chunki index bilan qiymatni solishtiramiz
-  arr.sort((a: number, b: number) => a - b);
+//   //  Arrayni o‘sish tartibida saralaymiz
+//   // Nega? Chunki index bilan qiymatni solishtiramiz
+//   arr.sort((a: number, b: number) => a - b);
 
-  //  Har bir elementni uning indexi bilan solishtiramiz
-  for (let i = 0; i < arr.length; i++) {
+//   //  Har bir elementni uning indexi bilan solishtiramiz
+//   for (let i = 0; i < arr.length; i++) {
 
-    // Agar index va qiymat teng bo‘lmasa,
-    // demak aynan shu index tushib qolgan son
-    if (arr[i] !== i) {
-      return i;
-    }
-  }
+//     // Agar index va qiymat teng bo‘lmasa,
+//     // demak aynan shu index tushib qolgan son
+//     if (arr[i] !== i) {
+//       return i;
+//     }
+//   }
 
-  //  Agar loop ichida topilmasa,
-  // demak oxirgi son (n) tushib qolgan
-  return arr.length;
-}
+//   //  Agar loop ichida topilmasa,
+//   // demak oxirgi son (n) tushib qolgan
+//   return arr.length;
+// }
 
-console.log(missingNumber([3, 0, 1])); 
+// console.log(missingNumber([3, 0, 1])); 
 
-console.log(missingNumber([0, 1])); 
+// console.log(missingNumber([0, 1])); 
 
-console.log(missingNumber([9,6,4,2,3,5,7,0,1])); 
+// console.log(missingNumber([9,6,4,2,3,5,7,0,1])); 
 
-console.log(missingNumber([0])); 
+// console.log(missingNumber([0])); 
 
-console.log(missingNumber([1])); 
+// console.log(missingNumber([1])); 
 
 
 
