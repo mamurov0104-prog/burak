@@ -1,28 +1,51 @@
 
+/*U-TASK
+
+Shunday function yozing, uni number parametri bolsin va 0 dan berilgan
+ parametrgacha bolgan oraliqdagi faqat toq sonlar nechtaligini return 
+ qilsin. MASALAN: sumOdds(9) return 4; sumOdds(11) return 5.  */
+
+function sumOdds(n:number){
+let count = 0;
+
+for(let i = 1; i< n ;i ++){
+  if(i%2 == 0){
+ count ++
+  }
+
+}
+return count;
+}
+
+console.log("toq sonlar :" , sumOdds(9));
+
+
+
+
 /*T-TASK
 
 Shunday function yozing, u sonlardan tashkil topgan 2 ta array qabul qilsin va ikkala 
 \arraydagi sonlarni tartiblab bir arrayda qaytarsin. MASALAN: mergeSortedArrays([0,3,4,31], [4,6,30]) 
 return [0,3,4,4,6,30,31]. */
 
-function mergeSortedArrays(arr1: number[], arr2: number[]): number[] {
-  //  arr1 va arr2 ni birlashtiramiz.
-  // concat() yangi array qaytaradi va original arraylarni o'zgartirmaydi.
-  const mergedArray = arr1.concat(arr2);
+// function mergeSortedArrays(arr1: number[], arr2: number[]): number[] {
+//   //  arr1 va arr2 ni birlashtiramiz.
+//   // concat() yangi array qaytaradi va original arraylarni o'zgartirmaydi.
+//   const mergedArray = arr1.concat(arr2);
 
-  // sort() orqali arrayni tartiblaymiz.
-  // (a, b) => a - b bu compare function.
-  // Agar natija manfiy bo'lsa → a oldinda qoladi
-  // Agar musbat bo'lsa → b oldinga o'tadi
-  // Agar 0 bo'lsa → joyi o'zgarmaydi
-  mergedArray.sort((a, b) => a - b);
+//   // sort() orqali arrayni tartiblaymiz.
+//   // (a, b) => a - b bu compare function.
+//   // Agar natija manfiy bo'lsa → a oldinda qoladi
+//   // Agar musbat bo'lsa → b oldinga o'tadi
+//   // Agar 0 bo'lsa → joyi o'zgarmaydi
+//   mergedArray.sort((a, b) => a - b);
 
-  // Tartiblangan arrayni qaytaramiz
-  return mergedArray;
-}
+//   // Tartiblangan arrayni qaytaramiz
+//   return mergedArray;
+// }
 
-// Misol uchun chaqirish:
-console.log(mergeSortedArrays([0, 3, 4, 31], [4, 6, 30]));
+// // Misol uchun chaqirish:
+// console.log(mergeSortedArrays([0, 3, 4, 31], [4, 6, 30]));
 
 
 /**
