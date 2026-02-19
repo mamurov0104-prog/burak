@@ -1,3 +1,36 @@
+/*V-TASK
+
+Shunday function yozing, uni string parametri bolsin va stringdagi harf va u harf necha marta 
+takrorlangani sonidan tashkil topgan object qaytarsin. MASALAN: countChars("hello") return {h: 1, e: 1, l: 2, o: 1}. */
+
+import { debug } from "console";
+import { randomBytes, randomFillSync } from "crypto";
+import { weekdaysMin } from "moment/ts3.1-typings/moment";
+import { threadCpuUsage } from "process";
+
+                                  // huddi bssr dagi promise kabi
+function countChars(str: string): Record<string, number> {
+   const result: Record<string, number> = {};
+
+   for(const char of str){
+    if(result[char]){
+         result[char] = result[char] + 1;
+    }
+    else{
+        result[char] = 1;
+    }
+   }
+
+   return result;
+}
+// console.log(countChars(`${randomFillSync}Hellodanparcha`));
+console.log(countChars(`${randomBytes}Hellodanparcha`));
+// console.log(countChars(`${toString}.Hellodanparcha`));
+
+
+console.log(countChars(`Hellodanparcha`))
+
+
 
 /*U-TASK
 
@@ -5,19 +38,19 @@ Shunday function yozing, uni number parametri bolsin va 0 dan berilgan
  parametrgacha bolgan oraliqdagi faqat toq sonlar nechtaligini return 
  qilsin. MASALAN: sumOdds(9) return 4; sumOdds(11) return 5.  */
 
-function sumOdds(n:number){
-let count = 0;
+// function sumOdds(n:number){
+// let count = 0;
 
-for(let i = 1; i< n ;i ++){
-  if(i%2 == 0){
- count ++
-  }
+// for(let i = 1; i< n ;i ++){
+//   if(i%2 == 0){
+//  count ++
+//   }
 
-}
-return count;
-}
+// }
+// return count;
+// }
 
-console.log("toq sonlar :" , sumOdds(9));
+// console.log("toq sonlar :" , sumOdds(9));
 
 
 
