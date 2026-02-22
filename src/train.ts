@@ -1,34 +1,77 @@
+/*
+W-TASK
+
+Shunday function yozing, uni array va number parametrlari bolsin. Function arrayni numberda berilgan uzunlikda kesib 
+bolaklarga ajratilgan array holatida qaytarsin. MASALAN: chunkArray([1,2,3,4,5,6,7,8,9,10], 3) return [[1,2,3], [4,5,6], [7,8,9], [10]].
+
+*/
+
+function chunkArray(arr: number[], size: number): number[][] {
+    // 1. natijani saqlash uchun bo'sh array yarat
+    const result: number[][] = [];
+
+    // 2. arrayni aylantirish
+    for (let i = 0; i < arr.length; i += size) {
+        // 3. slice yordamida bo'lakni oling
+        const chunk = arr.slice(i, i + size);
+
+        // 4. bo'lakni natijaga qo'shing
+        result.push(chunk);
+    }
+
+    return result;
+}
+const arr = [1,2,3,4,5,6,7,8,9,10];
+const size = 2;
+
+console.log(chunkArray(arr, size));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*V-TASK
 
 Shunday function yozing, uni string parametri bolsin va stringdagi harf va u harf necha marta 
 takrorlangani sonidan tashkil topgan object qaytarsin. MASALAN: countChars("hello") return {h: 1, e: 1, l: 2, o: 1}. */
 
-import { debug } from "console";
-import { randomBytes, randomFillSync } from "crypto";
-import { weekdaysMin } from "moment/ts3.1-typings/moment";
-import { threadCpuUsage } from "process";
+// import { debug } from "console";
+// import { randomBytes, randomFillSync } from "crypto";
+// import { weekdaysMin } from "moment/ts3.1-typings/moment";
+// import { threadCpuUsage } from "process";
 
                                   // huddi bssr dagi promise kabi
-function countChars(str: string): Record<string, number> {
-   const result: Record<string, number> = {};
+// function countChars(str: string): Record<string, number> {
+//    const result: Record<string, number> = {};
 
-   for(const char of str){
-    if(result[char]){
-         result[char] = result[char] + 1;
-    }
-    else{
-        result[char] = 1;
-    }
-   }
+//    for(const char of str){
+//     if(result[char]){
+//          result[char] = result[char] + 1;
+//     }
+//     else{
+//         result[char] = 1;
+//     }
+//    }
 
-   return result;
-}
-// console.log(countChars(`${randomFillSync}Hellodanparcha`));
-console.log(countChars(`${randomBytes}Hellodanparcha`));
-// console.log(countChars(`${toString}.Hellodanparcha`));
+//    return result;
+// }
+// // console.log(countChars(`${randomFillSync}Hellodanparcha`));
+// console.log(countChars(`${randomBytes}Hellodanparcha`));
+// // console.log(countChars(`${toString}.Hellodanparcha`));
 
 
-console.log(countChars(`Hellodanparcha`))
+// console.log(countChars(`Hellodanparcha`))
 
 
 
