@@ -1,4 +1,41 @@
 /*
+Shunday function yozing, uni object va string parapetrlari bolsin. Function string 
+parametri object ichida necha marotaba 
+takrorlanganligini qaytarsin (nested object bolsa ham sanasin).
+ MASALAN: countOccurrences({model: 'Bugatti', steer: {model: 'HANKOOK', size: 30}}, 'model') return 2.
+*/
+function countOccurrences(obj: Record<string, any>, targetKey: string): number {
+    let count = 0;
+
+    for (const key in obj) {
+        if (key === targetKey) {
+            count++;
+        }
+
+        const value = obj[key];
+
+        // Agar value object bo'lsa va null emas
+        if (value && typeof value === 'object') {
+            count += countOccurrences(value, targetKey);
+        }
+    }
+
+    return count;
+}
+const data = {
+    model: 'Chevrolet Cobalt',
+    steer: {
+        model: 'Black disc',
+        size: {
+            white:'300',
+            Black:200
+        }
+    }
+};
+
+console.log(countOccurrences(data, 'model')); 
+
+/*
 W-TASK
 
 Shunday function yozing, uni array va number parametrlari bolsin. Function arrayni numberda berilgan uzunlikda kesib 
@@ -6,25 +43,25 @@ bolaklarga ajratilgan array holatida qaytarsin. MASALAN: chunkArray([1,2,3,4,5,6
 
 */
 
-function chunkArray(arr: number[], size: number): number[][] {
-    // 1. natijani saqlash uchun bo'sh array yarat
-    const result: number[][] = [];
+// function chunkArray(arr: number[], size: number): number[][] {
+//     // 1. natijani saqlash uchun bo'sh array yarat
+//     const result: number[][] = [];
 
-    // 2. arrayni aylantirish
-    for (let i = 0; i < arr.length; i += size) {
-        // 3. slice yordamida bo'lakni oling
-        const chunk = arr.slice(i, i + size);
+//     // 2. arrayni aylantirish
+//     for (let i = 0; i < arr.length; i += size) {
+//         // 3. slice yordamida bo'lakni oling
+//         const chunk = arr.slice(i, i + size);
 
-        // 4. bo'lakni natijaga qo'shing
-        result.push(chunk);
-    }
+//         // 4. bo'lakni natijaga qo'shing
+//         result.push(chunk);
+//     }
 
-    return result;
-}
-const arr = [1,2,3,4,5,6,7,8,9,10];
-const size = 2;
+//     return result;
+// }
+// const arr = [1,2,3,4,5,6,7,8,9,10];
+// const size = 2;
 
-console.log(chunkArray(arr, size));
+// console.log(chunkArray(arr, size));
 
 
 
