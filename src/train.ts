@@ -1,39 +1,65 @@
 /*
+Y-TASK
+
+Shunday function yozing, uni 2 ta array parapetri bolsin. Function ikkala arrayda ham ishtirok
+ etgan qiymatlarni bir arrayda qaytarsin. MASALAN: findIntersection([1,2,3], [3,2,0]) return [2,3].
+*/
+
+function findIntersection(arr1: number[], arr2: number[]): number[] {
+  const result: number[] = []; // Natija manashetta boladi
+
+  for (let i = 0; i < arr1.length; i++) {
+    const element = arr1[i];
+
+    // Agar arr2 da bor va result da hali qo‘shilmagan bo‘lsa
+    if (arr2.includes(element) && !result.includes(element)) {
+      result.push(element);
+    }
+  }
+
+  return result;
+}
+
+// ----------------- Test -----------------
+console.log(findIntersection([1,2,2,3], [3,2,0])); 
+console.log(findIntersection([5,1,2,5], [2,5,5,7])); 
+
+/*
 Shunday function yozing, uni object va string parapetrlari bolsin. Function string 
 parametri object ichida necha marotaba 
 takrorlanganligini qaytarsin (nested object bolsa ham sanasin).
  MASALAN: countOccurrences({model: 'Bugatti', steer: {model: 'HANKOOK', size: 30}}, 'model') return 2.
 */
-function countOccurrences(obj: Record<string, any>, targetKey: string): number {
-    let count = 0;
+// function countOccurrences(obj: Record<string, any>, targetKey: string): number {
+//     let count = 0;
 
-    for (const key in obj) {
-        if (key === targetKey) {
-            count++;
-        }
+//     for (const key in obj) {
+//         if (key === targetKey) {
+//             count++;
+//         }
 
-        const value = obj[key];
+//         const value = obj[key];
 
-        // Agar value object bo'lsa va null emas
-        if (value && typeof value === 'object') {
-            count += countOccurrences(value, targetKey);
-        }
-    }
+//         // Agar value object bo'lsa va null emas
+//         if (value && typeof value === 'object') {
+//             count += countOccurrences(value, targetKey);
+//         }
+//     }
 
-    return count;
-}
-const data = {
-    model: 'Chevrolet Cobalt',
-    steer: {
-        model: 'Black disc',
-        size: {
-            white:'300',
-            Black:200
-        }
-    }
-};
+//     return count;
+// }
+// const data = {
+//     model: 'Chevrolet Cobalt',
+//     steer: {
+//         model: 'Black disc',
+//         size: {
+//             white:'300',
+//             Black:200
+//         }
+//     }
+// };
 
-console.log(countOccurrences(data, 'model')); 
+// console.log(countOccurrences(data, 'model')); 
 
 /*
 W-TASK
