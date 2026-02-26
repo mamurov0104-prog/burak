@@ -63,7 +63,7 @@ class AuthService {
       return result;
     } catch (err) {
       // Token noto‘g‘ri yoki muddati tugagan bo‘lsa, xato tashlaymiz
-      throw new Errors(HttpCode.UNAUTHORIZED, Message.TOKEN_INVALID);
+      throw new Errors(HttpCode.UNAUTHORIZED, Message.TOKEN_CREATION_FAILED);
     }
   }
 }
