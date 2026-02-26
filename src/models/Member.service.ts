@@ -62,6 +62,28 @@ class MemberService{
 
 
 
+       // Bu funksiya memberService ichida a'zo tafsilotlarini olish uchun ishlatiladi
+// Kiruvchi param: member (MongoDB document yoki object) 
+// Chiquvchi natija: member tafsilotlari yoki xato
+
+public async getMemberDetail(member: Member): Promise<any> {
+  // member._id ni Mongoose ObjectId ga o‘giramiz
+  const memberId = shapeIntoMongooseObjectId(member._id);
+
+  // DB dan active statusga ega a'zo topamiz
+  const result = await this.memberModel
+    .findOne({
+      _id: memberId,                 // ID bo‘yicha qidirish
+      memberStatus: MemberStatus.ACTIVE, // Active statusga ega bo‘lishi shart
+    })
+    .exec(); // query ni bajarish
+
+  // Agar natija topilmasa, NOT_FOUND xato tashlanadi
+  if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+  // Agar topilsa, natijani qaytaramiz
+  return result;
+}
     // ---------------------------- < SPA FINISHED > ----------------------------
 
     public async processSignup(input:MemberInput): Promise<any> {
