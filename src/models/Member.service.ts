@@ -15,51 +15,84 @@ class MemberService{
 
     // ---------------------------- < SPA STARTED > ----------------------------
     
-    public async signup(input:MemberInput): Promise<any> {
-       const salt = await bcrypt.genSalt();
-       input.memberPassword = await bcrypt.hash(input.memberPassword , salt);
- 
-        try{
-        const result = await this.memberModel.create(input);
-        result.memberPassword='';
-        return result.toJSON();
-        }catch(err){
-            console.error("Error , modelsignUp process  :", err)
-            throw new Errors(HttpCode.BAD_REQUEST,Message.USED_NICK_PHONE);
-        }
-        
+   // Bu funksiya memberModel orqali a'zo yaratadi
+// Kiruvchi param: input (MemberInput)
+// Chiquvchi natija: yaratilgan member JSON formatida
+
+public async signup(input: MemberInput): Promise<any> {
+  // 1. Passwordni xavfsizlash (hash qilish)
+  const salt = await bcrypt.genSalt(); // Salt generatsiya qilamiz
+  input.memberPassword = await bcrypt.hash(input.memberPassword, salt); // Passwordni hash qilamiz
+
+  try {
+    // 2. Member yaratish
+    const result = await this.memberModel.create(input);
+
+    // 3. Natijada passwordni bo'shatamiz, chunki clientga yubormaslik kerak
+    result.memberPassword = '';
+
+    // 4. JSON formatida qaytaramiz
+    return result.toJSON();
+  } catch (err) {
+    // Agar DB constraint yoki unique error bo'lsa
+    console.error("Error, model signup process:", err);
+
+    // Xatolikni custom Errors orqali tashlaymiz
+    throw new Errors(HttpCode.BAD_REQUEST, Message.USED_NICK_PHONE);
+  }
+}
+
+
+
+
+       // Bu funksiya: member login jarayonini bajaradi
+// Kiruvchi param: input (LoginInput)
+// Chiquvchi natija: muvaffaqiyatli login qilgan member (JSON formatida)
+public async login(input: LoginInput): Promise<any> {
+  //  DBdan memberNick bo‘yicha a'zo topamiz
+  // Agar memberStatus DELETE bo'lsa, qidiruvdan chiqariladi
+  const member = await this.memberModel
+    .findOne(
+      {
+        memberNick: input.memberNick,             // Nick bo‘yicha qidirish
+        memberStatus: { $ne: MemberStatus.DELETE } // O'chirilganlar qidiruvdan chiqariladi
+      },
+      {
+        _id: 1,            // Qaytariladigan fieldlar
+        memberNick: 1,
+        memberPassword: 1, 
+        memberStatus: 1
       }
+    )
+    .exec(); // Queryni bajarish va Promise qaytarish
 
+  // Agar member topilmasa, 404 xato
+  if (!member) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
 
+  //  Agar member BLOCK holatda bo‘lsa, 403 xato
+  if (member.memberStatus === MemberStatus.BLOCK) {
+    throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
+  }
 
+  //  Passwordni tekshiramiz
+  // input.password vs DBdagi hashed password
+  const isMatch = await bcrypt.compare(input.memberPassword, member.memberPassword);
 
-        public async login(input:LoginInput):Promise<any>{
-        // Conside member status later
-            const member = await this.memberModel
-        .findOne( 
-            {memberNick:input.memberNick, 
-                memberStatus:{$ne:MemberStatus.DELETE} // delete bolgan bolsa chiqmedi qidiruvda
-            }, 
-            {_id:1,memberNick:1,memberPassword:1,memberStatus:1}) 
-        .exec();
+  // Agar password mos kelmasa, 401 xato
+  if (!isMatch) {
+    throw new Errors(HttpCode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+  }
 
-        if(!member) throw new Errors(HttpCode.NOT_FOUND,Message.NO_MEMBER_NICK);
-        else if (member.memberStatus === MemberStatus.BLOCK){
-            throw new Errors(HttpCode.FORBIDDEN,Message.BLOCKED_USER);
-        }
+  //  Agar hammasi to‘g‘ri bo‘lsa, full member ma’lumotini olish
+  // lean() – Mongoose documentni oddiy JS objectga aylantiradi
+  const result = await this.memberModel.findById(member._id).lean().exec();
 
-        const isMatch = await bcrypt.compare(
-            input.memberPassword,
-            member.memberPassword);
-        if(!isMatch){
-            throw new Errors(HttpCode.UNAUTHORIZED,Message.WRONG_PASSWORD);}
+  // Logga natijani chiqarish
+  console.log("result:", result);
 
-        const result = await this.memberModel.findById(member._id).lean().exec();
-            console.log("result:",result);
-        return result;
-
-        }
-
+  // Natijani return qilamiz
+  return result;
+}
 
 
        // Bu funksiya memberService ichida a'zo tafsilotlarini olish uchun ishlatiladi
