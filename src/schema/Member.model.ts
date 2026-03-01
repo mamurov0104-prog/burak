@@ -7,11 +7,7 @@ const memberSchema = new Schema({ // classdan object yasash
         enum: MemberType,
         default: MemberType.USER
     },
-    //  memberType: {
-    //   type: String,
-    //   enum: Object.values(MemberType), 
-    //   default: MemberType.USER,         
-    // },
+   
     memberStatus:{
         type:String,
         enum:MemberStatus,
@@ -51,5 +47,12 @@ const memberSchema = new Schema({ // classdan object yasash
     }
 },{timestamps:true}//updated at and created at
 );
+memberSchema.index({ memberNick: 1 }, { unique: true });
+memberSchema.index({ memberPhone: 1 }, { unique: true });
 
 export default mongoose.model('Member', memberSchema);
+
+
+
+
+

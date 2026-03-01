@@ -3,7 +3,7 @@ console.log(" MEMBER CONTROLLER LOADED");
 import { NextFunction, Request,Response} from "express";
 import {T} from "../libs/types/common";
 import MemberService from "../models/Member.service";
-import { MemberInput , LoginInput, Member, ExtendedRequest } from "../libs/types/member";
+import { MemberInput , LoginInput, Member, ExtendedRequest, MemberUpdateInput } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import AuthService from "../models/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
@@ -14,6 +14,37 @@ const memberService = new MemberService();
 const authService = new AuthService();
  
 const memberController:T={};
+// ------------------------------------------------------- < getRestaurant get  started > --------------------------------------------
+
+
+memberController.getRestaurant = async (req: Request, res: Response) => {
+  /**
+ * GET /member/restaurant
+ *
+ * Vazifasi:
+ * - RESTAURANT turidagi memberni olib keladi
+ * - Natijani JSON ko‘rinishda qaytaradi
+ */
+  try {
+    console.log("getRestaurant");
+
+    const result = await memberService.getRestaurant();
+
+    res.status(HttpCode.OK).json(result);
+  } catch (error) {
+    if (error instanceof Errors) res.status(error.code).json(error);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+
+// ------------------------------------------------------- < getRestaurant get finished > --------------------------------------------
+
+
+
+
+
+
 // ------------------------------------------------------- < SignUp POST started > --------------------------------------------
 
 // Bu funksiya yangi a'zo ro'yxatdan o'tishi uchun ishlatiladi
@@ -247,6 +278,86 @@ memberController.retrieveAuth = async (
 };
 
 // ------------------------------------------------------- < retrieveAuth get finished > --------------------------------------------
+
+// ------------------------------------------------------- < updateMember started > --------------------------------------------
+
+// memberController ichiga updateMember nomli async funksiya qo‘shilmoqda
+memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
+
+  /**
+   * POST /member/update
+   *
+   * Himoyalangan endpoint (verifyAuth middleware orqali)
+   *
+   * Jarayon:
+   * 1) verifyAuth userni aniqlab req.member ga joylaydi
+   * 2) req.body dan kelgan ma’lumotlar olinadi
+   * 3) Agar rasm yuklangan bo‘lsa req.file orqali olinadi
+   * 4) Service qatlamiga yuborilib database da update qilinadi
+   */
+
+  try {
+    // Terminalda funksiya ishlaganini ko‘rsatish uchun
+    console.log("updateMember");
+
+    // Client tomonidan yuborilgan body ma’lumotlarini olish
+    // MemberUpdateInput — bu TypeScript type (update qilinadigan fieldlar)
+    const input: MemberUpdateInput = req.body;
+
+    // Agar foydalanuvchi rasm yuklagan bo‘lsa
+    if (req.file) {
+      // Yuklangan rasmning saqlangan pathini olish
+      // replace orqali keraksiz belgilarni tozalash
+      input.memberImage = req.file.path.replace(/,\\/g, '');
+    }
+
+    // Service qatlamiga murojaat qilish
+    // req.member — login bo‘lgan foydalanuvchi ma’lumoti
+    // input — yangilanadigan ma’lumotlar
+    const result = await memberService.updateMember(req.member, input);
+
+    // Agar hammasi muvaffaqiyatli bo‘lsa 200 (OK) status bilan javob qaytarish
+    res.status(HttpCode.OK).json(result);
+
+  } catch (error) {
+    // Agar xatolik yuz bersa terminalga chiqarish
+    console.log("ERROR updateMember:", error);
+
+    // Agar xato bizning custom Errors classimizdan bo‘lsa
+    if (error instanceof Errors) {
+      // O‘sha xatoning o‘z status kodi bilan qaytarish
+      res.status(error.code).json(error);
+    } else {
+      // Noma’lum xatolar uchun umumiy (standard) error qaytarish
+      res.status(Errors.standard.code).json(Errors.standard);
+    }
+  }
+};
+
+// ------------------------------------------------------- < updateMember finished > --------------------------------------------
+
+
+// ------------------------------------------------------- < getTopUsers started > --------------------------------------------
+memberController.getTopUsers = async (req: Request, res: Response) => {
+  /**
+ * GET /member/top-users
+ *
+ * Vazifasi:
+ * - Eng ko‘p ball to‘plagan 4 ta active userni qaytarish
+ */
+  try {
+    console.log("getTopUsers");
+
+    const result = await memberService.getTopUsers();
+
+    res.status(HttpCode.OK).json(result);
+  } catch (error) {
+    if (error instanceof Errors) res.status(error.code).json(error);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+// ------------------------------------------------------- < getTopUsers finished > --------------------------------------------
 
 
 

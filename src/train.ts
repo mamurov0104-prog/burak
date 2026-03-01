@@ -1,3 +1,20 @@
+/**
+Z-TASK
+
+Shunday function yozing, uni sonlardan tashkil topgan array qabul qilsin. Function arraydagi juft sonlarni yigindisini qaytarsin. MASALAN: sumEvens([1,2,3]) return 2.  
+ 
+
+ */
+function sumEvens(arr: number[]): number {
+  return arr.reduce((sum, num) => num % 2 === 0 ? sum + num : sum, 0);
+}
+
+
+console.log(sumEvens([1, 2, 3]));      
+console.log(sumEvens([4, 5, 6, 7]));   
+console.log(sumEvens([1, 3, 5]));      
+
+
 /*
 Y-TASK
 
@@ -5,24 +22,24 @@ Shunday function yozing, uni 2 ta array parapetri bolsin. Function ikkala arrayd
  etgan qiymatlarni bir arrayda qaytarsin. MASALAN: findIntersection([1,2,3], [3,2,0]) return [2,3].
 */
 
-function findIntersection(arr1: number[], arr2: number[]): number[] {
-  const result: number[] = []; // Natija manashetta boladi
+// function findIntersection(arr1: number[], arr2: number[]): number[] {
+//   const result: number[] = []; // Natija manashetta boladi
 
-  for (let i = 0; i < arr1.length; i++) {
-    const element = arr1[i];
+//   for (let i = 0; i < arr1.length; i++) {
+//     const element = arr1[i];
 
-    // Agar arr2 da bor va result da hali qo‘shilmagan bo‘lsa
-    if (arr2.includes(element) && !result.includes(element)) {
-      result.push(element);
-    }
-  }
+//     // Agar arr2 da bor va result da hali qo‘shilmagan bo‘lsa
+//     if (arr2.includes(element) && !result.includes(element)) {
+//       result.push(element);
+//     }
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
-// ----------------- Test -----------------
-console.log(findIntersection([1,2,2,3], [3,2,0])); 
-console.log(findIntersection([5,1,2,5], [2,5,5,7])); 
+// // ----------------- Test -----------------
+// console.log(findIntersection([1,2,2,3], [3,2,0])); 
+// console.log(findIntersection([5,1,2,5], [2,5,5,7])); 
 
 /*
 Shunday function yozing, uni object va string parapetrlari bolsin. Function string 

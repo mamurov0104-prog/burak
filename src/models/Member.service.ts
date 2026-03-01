@@ -117,6 +117,76 @@ public async getMemberDetail(member: Member): Promise<any> {
   // Agar topilsa, natijani qaytaramiz
   return result;
 }
+
+   
+
+// ---------------------------- < getTopUsers started > ----------------------------
+
+// MemberService class ichidagi getTopUsers method
+// Bu method top 4 eng ko‘p points ga ega ACTIVE statusdagi foydalanuvchilarni olib beradi
+public async getTopUsers(): Promise<any> {
+
+  // Database query:
+  // 1) memberStatus: MemberStatus.ACTIVE → faqat ACTIVE statusdagi userlar
+  // 2) memberPoints: { $gte: 1 } → points 1 yoki undan katta bo‘lganlar
+  const result = this.memberModel
+    .find({ memberStatus: MemberStatus.ACTIVE, memberPoints: { $gte: 1 } })
+    
+    // points bo‘yicha kamayish tartibida sort qilinadi
+    .sort({ memberPoints: -1 })
+    
+    // faqat eng yuqori 4 ta member olinadi
+    .limit(4)
+    
+    // query ni yakunlaydi va Promise qaytaradi
+    .exec();
+
+  // Agar natija topilmasa, 404 error tashlanadi
+  if (!result) {
+    throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+  }
+
+  // Agar natija topilsa, top users array qaytariladi
+  return result;
+}
+
+// ---------------------------- < getTopUsers FINISHED > ----------------------------
+    
+    // ---------------------------- < updateMember started > ----------------------------
+
+// MemberService class ichidagi updateMember method
+// Bu method database dagi member ma’lumotlarini yangilaydi
+public async updateMember(
+  member: Member,              // Hozir login bo‘lgan user (verifyAuth orqali keladi)
+  input: MemberUpdateInput,    // Yangilanadigan ma’lumotlar (body dan keladi)
+): Promise<any> {
+
+  // member._id ni Mongoose ObjectId formatiga o‘tkazish
+  // Chunki MongoDB _id bilan ishlaganda ObjectId tip talab qiladi
+  const memberId = shapeIntoMongooseObjectId(member._id);
+
+  // Database dan shu _id ga ega memberni topib update qilish
+  // findOneAndUpdate:
+  // 1) { _id: memberId } — qaysi document yangilanadi
+  // 2) input — yangi ma’lumotlar
+  // 3) { new: true } — update qilingandan keyingi (yangi) documentni qaytaradi
+  const result = await this.memberModel
+    .findOneAndUpdate({ _id: memberId }, input, { new: true })
+    .exec();
+
+  // Agar update bo‘lmasa (member topilmasa)
+  if (!result) {
+    // 404 xato tashlanadi
+    // Message.CREATED_FAILED — bu yerda update muvaffaqiyatsiz bo‘lganini bildiradi
+    throw new Errors(HttpCode.NOT_FOUND, Message.CREATED_FAILED);
+  }
+
+  // Agar update muvaffaqiyatli bo‘lsa, yangilangan member qaytariladi
+  return result;
+}
+
+// ---------------------------- < updateMember FINISHED > ----------------------------
+
     // ---------------------------- < SPA FINISHED > ----------------------------
 
     public async processSignup(input:MemberInput): Promise<any> {
@@ -289,5 +359,38 @@ return  await this.memberModel.findById(member._id).exec();
 
 // ------------------------------------------------------- < updateChosenUser finished  > --------------------------------------------
 
+
+
+
+// ------------------------------------------------------- < getRestaurant started > --------------------------------------------
+
+// MemberService class ichidagi getRestaurant nomli async method
+// Bu method RESTAURANT tipidagi memberni database dan olib beradi
+public async getRestaurant(): Promise<any> {
+
+  // memberModel orqali database ga murojaat qilinyapti
+  // findOne — shartga mos keladigan bitta hujjatni topadi
+  // { memberType: MemberType.RESTAURANT } —
+  // faqat memberType qiymati RESTAURANT bo‘lgan document qidiriladi
+  // lean() — Mongoose document emas, oddiy JavaScript object qaytaradi (tezroq ishlaydi)
+  // exec() — query ni yakunlab Promise qaytaradi
+  const result = await this.memberModel
+    .findOne({ memberType: MemberType.RESTAURANT })
+    .lean()
+    .exec();
+
+  // Agar database dan hech qanday ma’lumot topilmasa
+  if (!result) {
+    // Custom error tashlanadi
+    // HttpCode.NOT_FOUND — 404 status
+    // Message.NO_DATA_FOUND — oldindan belgilangan xabar
+    throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+  }
+
+  // Agar ma’lumot topilgan bo‘lsa, natijani qaytaradi
+  return result;
+}
+
+// ------------------------------------------------------- < getRestaurant finished > --------------------------------------------
 };
 export default MemberService;
