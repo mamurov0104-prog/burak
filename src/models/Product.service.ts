@@ -64,6 +64,7 @@ if(memberId){
         viewGroup: ViewGroup.PRODUCT,
       };
       const existView = await this.viewService.checkViewExistence(input);
+        console.log("existView;", !!existView); 
       if(!existView){
          console.log("planning to insert new view")
           await this.viewService.insertMemberView(input);
