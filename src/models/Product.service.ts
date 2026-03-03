@@ -5,7 +5,7 @@ import ProductModel from "../schema/Product.model";
 import { HttpCode } from "../libs/Errors";
 import { shapeIntoMongooseObjectId } from "../libs/config";
 import { ProductStatus } from "../libs/enums/product.enum";
-
+import { ObjectId } from "mongoose";
 class ProductService{
  private readonly productModel;
  constructor(){
@@ -21,7 +21,7 @@ public async getProducts(inquiry: ProductInquiry): Promise<Product[]>{ // Promis
 const match: T = { productStatus:ProductStatus.PROCESS };
 if(inquiry.productCollection) match.productCollection = inquiry.productCollection;
 if(inquiry.search){ 
-   match.productName = {$regex: new RegExp(inquiry.search, "i")}
+   match.productName = {$regex: new RegExp(inquiry.search, "i")} //i = flag
 }
 const sort: T = inquiry.order === "productPrice"
  ? {[inquiry.order]:1} // dynamic key
@@ -37,6 +37,25 @@ return result;
 
 }
 /* >-----< getProducts  finished>-----< */
+
+/* >-----< getProduct  started>-----< */
+
+public async getProduct(
+   memberId:ObjectId 
+   | null 
+   , id: string): Promise<any>{ 
+const productId = shapeIntoMongooseObjectId(id);
+let result = await this.productModel
+.findOne({
+   _id:productId ,
+   productStatus:ProductStatus.PROCESS,
+}).exec();
+if(!result) throw new Errors(HttpCode.NOT_FOUND , Message.NO_DATA_FOUND); 
+//TODO 
+return result;
+
+}
+/* >-----< getProduct  finished>-----< */
 
 
 

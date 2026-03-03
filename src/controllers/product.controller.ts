@@ -2,7 +2,7 @@ import {T} from "../libs/types/common";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { Request,Response} from "express";
 import ProductService from "../models/Product.service";
-import { AdminRequest } from "../libs/types/member";
+import { AdminRequest, ExtendedRequest } from "../libs/types/member";
 import { ProductInput, ProductInquiry } from "../libs/types/product";
 import { ProductCollection } from "../libs/enums/product.enum";
 const productService = new ProductService();
@@ -10,6 +10,8 @@ const productService = new ProductService();
 
 const productController:T={};
 /* >-----< SPA >-----< */
+
+// -------------------------------- > getProducts get started < -----------------------------------
        productController.getProducts = async (req:Request,res:Response) =>{
              try{
 
@@ -32,7 +34,29 @@ const productController:T={};
 
             }
 }
+// -------------------------------- > getProducts get end < -----------------------------------
 
+
+// -------------------------------- > getProduct get started < -----------------------------------
+       productController.getProduct = async (req:ExtendedRequest,res:Response) =>{
+             try{
+
+            console.log("Coming  getProduct Page!");
+            const { id } = req.params;
+            const memberId = req.member?._id ?? null;
+            const result = await productService.getProduct(memberId,id);
+            res.status(HttpCode.OK).json({result:result})
+
+            }
+            catch(err){
+            
+            console.log("Error, getProducts :",err);
+            if(err instanceof Errors) res.status(err.code).json(err)
+                else res.status(Errors.standard.code).json(Errors.standard);
+
+            }
+}
+// -------------------------------- > getProduct get end < -----------------------------------
 
 
 /* >-----< BSSR  started>-----< */
