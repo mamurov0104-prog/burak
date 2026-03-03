@@ -1,3 +1,20 @@
+/* 
+ZA-TASK
+
+Shunday function yozing, u array ichidagi objectlarni “age” qiymati boyicha sortlab bersin. MASALAN: sortByAge([{age:23}, {age:21}, {age:13}]) return [{age:13}, {age:21}, {age:23}].
+
+@MITASK
+*/
+function sortByAge(arr: { age: number }[]): { age: number }[] {
+  return arr.sort((a, b) => a.age - b.age);
+}
+const result = sortByAge([
+  { age: 45 },
+  { age: 22 },
+  { age: 19 },
+]);
+
+console.log(result);
 /**
 Z-TASK
 
@@ -5,14 +22,14 @@ Shunday function yozing, uni sonlardan tashkil topgan array qabul qilsin. Functi
  
 
  */
-function sumEvens(arr: number[]): number {
-  return arr.reduce((sum, num) => num % 2 === 0 ? sum + num : sum, 0);
-}
+// function sumEvens(arr: number[]): number {
+//   return arr.reduce((sum, num) => num % 2 === 0 ? sum + num : sum, 0);
+// }
 
 
-console.log(sumEvens([1, 2, 3]));      
-console.log(sumEvens([4, 5, 6, 7]));   
-console.log(sumEvens([1, 3, 5]));      
+// console.log(sumEvens([1, 2, 3]));      
+// console.log(sumEvens([4, 5, 6, 7]));   
+// console.log(sumEvens([1, 3, 5]));      
 
 
 /*
