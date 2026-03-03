@@ -14,33 +14,6 @@ const memberService = new MemberService();
 const authService = new AuthService();
  
 const memberController:T={};
-// ------------------------------------------------------- < getRestaurant get  started > --------------------------------------------
-
-
-memberController.getRestaurant = async (req: Request, res: Response) => {
-  /**
- * GET /member/restaurant
- *
- * Vazifasi:
- * - RESTAURANT turidagi memberni olib keladi
- * - Natijani JSON ko‘rinishda qaytaradi
- */
-  try {
-    console.log("getRestaurant");
-
-    const result = await memberService.getRestaurant();
-
-    res.status(HttpCode.OK).json(result);
-  } catch (error) {
-    if (error instanceof Errors) res.status(error.code).json(error);
-    else res.status(Errors.standard.code).json(Errors.standard);
-  }
-};
-
-
-// ------------------------------------------------------- < getRestaurant get finished > --------------------------------------------
-
-
 
 
 
@@ -358,6 +331,33 @@ memberController.getTopUsers = async (req: Request, res: Response) => {
 };
 
 // ------------------------------------------------------- < getTopUsers finished > --------------------------------------------
+
+// ------------------------------------------------------- < getRestaurant get  started > --------------------------------------------
+
+
+memberController.getRestaurant = async (req: Request, res: Response) => {
+  /**
+ * GET /member/restaurant
+ *
+ * Vazifasi:
+ * - RESTAURANT turidagi memberni olib keladi
+ * - Natijani JSON ko‘rinishda qaytaradi
+ */
+  try {
+    console.log("getRestaurant");
+
+    const result = await memberService.getRestaurant();
+
+    res.status(HttpCode.OK).json(result);
+  } catch (error) {
+    if (error instanceof Errors) res.status(error.code).json(error);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
+
+// ------------------------------------------------------- < getRestaurant get finished > --------------------------------------------
+
 
 
 

@@ -118,6 +118,35 @@ public async getMemberDetail(member: Member): Promise<any> {
   return result;
 }
 
+
+
+// ------------------------------------------------------- < getRestaurant started > --------------------------------------------
+
+// MemberService class ichidagi getRestaurant nomli async method
+// Bu method RESTAURANT tipidagi memberni database dan olib beradi
+public async getRestaurant(): Promise<any> {
+
+  // memberModel orqali database ga murojaat qilinyapti
+  // findOne — shartga mos keladigan bitta hujjatni topadi
+  // { memberType: MemberType.RESTAURANT } —
+  // faqat memberType qiymati RESTAURANT bo‘lgan document qidiriladi
+  // lean() — Mongoose document emas, oddiy JavaScript object qaytaradi (tezroq ishlaydi)
+  // exec() — query ni yakunlab Promise qaytaradi
+  const result = await this.memberModel
+    .findOne({ memberType: MemberType.RESTAURANT })
+    .lean()
+    .exec();
+
+  // Agar database dan hech qanday ma’lumot topilmasa
+  if (!result) {
+
+    throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+  }
+
+  return result;
+}
+
+// ------------------------------------------------------- < getRestaurant finished > -----
    
 
 // ---------------------------- < getTopUsers started > ----------------------------
@@ -131,8 +160,9 @@ public async getTopUsers(): Promise<any> {
   // 2) memberPoints: { $gte: 1 } → points 1 yoki undan katta bo‘lganlar
   const result = this.memberModel
     .find({ memberStatus: MemberStatus.ACTIVE, memberPoints: { $gte: 1 } })
-    
+                                                               // greater than 1 and 1+
     // points bo‘yicha kamayish tartibida sort qilinadi
+    // memberPointni yuqoridan pastga sort qilish
     .sort({ memberPoints: -1 })
     
     // faqat eng yuqori 4 ta member olinadi
@@ -146,7 +176,6 @@ public async getTopUsers(): Promise<any> {
     throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
   }
 
-  // Agar natija topilsa, top users array qaytariladi
   return result;
 }
 
@@ -176,12 +205,9 @@ public async updateMember(
 
   // Agar update bo‘lmasa (member topilmasa)
   if (!result) {
-    // 404 xato tashlanadi
-    // Message.CREATED_FAILED — bu yerda update muvaffaqiyatsiz bo‘lganini bildiradi
     throw new Errors(HttpCode.NOT_FOUND, Message.CREATED_FAILED);
   }
 
-  // Agar update muvaffaqiyatli bo‘lsa, yangilangan member qaytariladi
   return result;
 }
 
@@ -361,36 +387,5 @@ return  await this.memberModel.findById(member._id).exec();
 
 
 
-
-// ------------------------------------------------------- < getRestaurant started > --------------------------------------------
-
-// MemberService class ichidagi getRestaurant nomli async method
-// Bu method RESTAURANT tipidagi memberni database dan olib beradi
-public async getRestaurant(): Promise<any> {
-
-  // memberModel orqali database ga murojaat qilinyapti
-  // findOne — shartga mos keladigan bitta hujjatni topadi
-  // { memberType: MemberType.RESTAURANT } —
-  // faqat memberType qiymati RESTAURANT bo‘lgan document qidiriladi
-  // lean() — Mongoose document emas, oddiy JavaScript object qaytaradi (tezroq ishlaydi)
-  // exec() — query ni yakunlab Promise qaytaradi
-  const result = await this.memberModel
-    .findOne({ memberType: MemberType.RESTAURANT })
-    .lean()
-    .exec();
-
-  // Agar database dan hech qanday ma’lumot topilmasa
-  if (!result) {
-    // Custom error tashlanadi
-    // HttpCode.NOT_FOUND — 404 status
-    // Message.NO_DATA_FOUND — oldindan belgilangan xabar
-    throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-  }
-
-  // Agar ma’lumot topilgan bo‘lsa, natijani qaytaradi
-  return result;
-}
-
-// ------------------------------------------------------- < getRestaurant finished > --------------------------------------------
 };
 export default MemberService;

@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use(function (req, res, next) {
-  // bu yerda shu mantiqni test qilib otib ket!
+
   const sessionInstance = req.session as T;
   res.locals.member = sessionInstance.member;
   next();
