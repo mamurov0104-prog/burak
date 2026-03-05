@@ -263,20 +263,7 @@ private async recordOrderItem(
   const memberId = shapeIntoMongooseObjectId(member._id);
   const orderId = shapeIntoMongooseObjectId(input.orderId);
   const orderStatus = input.orderStatus;
-
-
-  const result = await this.orderModel.findOne({
-    memberId: memberId,
-    _id: orderId,
-  }).exec();
-
-  if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-
-
-  if (orderStatus !== OrderStatus.PROCESS) {
-  
-  } else {
-    const result = await this.orderModel.findOneAndUpdate(
+  const result = await this.orderModel.findOneAndUpdate(
       { memberId: memberId, _id: orderId }, 
       { orderStatus: orderStatus },         
       { new: true }                          
@@ -285,7 +272,7 @@ private async recordOrderItem(
   
     if (orderStatus === OrderStatus.PROCESS) {
       this.memberService.addUserPoint(member, 1);
-    }
+    
 
 
     return result;
