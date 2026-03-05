@@ -59,6 +59,7 @@ class OrderService {
     orderId: ObjectId,
     input: OrderItemInput[],
   ): Promise<void> {
+    // orderItems collectionga yoziladi
     const promisedList = input.map(async (item: OrderItemInput) => {
       item.orderId = orderId;
       item.productId = shapeIntoMongooseObjectId(item.productId);
@@ -102,7 +103,6 @@ class OrderService {
       .exec();
     return result;
   }
-  // throw new Errors  pass qilindi
 
   public async updateOrder(
     member: Member,
@@ -133,7 +133,6 @@ class OrderService {
           { new: true },
         )
         .exec();
-      //orderStatus Pause -> Process  +1 point
       if (orderStatus === OrderStatus.PROCCESS) {
         this.memberService.addUserPoint(member, 1);
       }
@@ -143,5 +142,3 @@ class OrderService {
 }
 
 export default OrderService;
-
-// lookup
