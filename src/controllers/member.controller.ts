@@ -188,7 +188,7 @@ memberController.verifyAuth = async (
   try {
     // 1 Clientdan cookie orqali accessToken olish
     const token = req.cookies["accessToken"];
-
+console.log("verifyAuth middleware ishladi");
     // 2 Agar token mavjud bo‘lsa
     if (token) {
       // authService.checkAuth(token) – tokenni tekshiradi
