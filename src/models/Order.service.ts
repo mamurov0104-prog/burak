@@ -271,13 +271,10 @@ private async recordOrderItem(
 
   
     if (orderStatus === OrderStatus.PROCESS) {
-      this.memberService.addUserPoint(member, 1);
-    
-
-
-    return result;
-  }
+      await this.memberService.addUserPoint(member, 1);
+     }
 // ------------------------------------ < updateOrder finished > ------------------------------------
+    return result;
 
 }
 
