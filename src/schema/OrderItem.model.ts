@@ -14,6 +14,7 @@ const orderItemSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Order",
     },
+    // order item qaysi productdan xosil boldi 
     productId: {
       type: Schema.Types.ObjectId,
       ref: "Product",

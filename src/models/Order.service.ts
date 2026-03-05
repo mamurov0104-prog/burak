@@ -18,8 +18,7 @@ class OrderService {
   private readonly orderItemModel;
   private readonly memberService;
 
-  // ikki xil collecton bilan birga ishlaydi
-  // quyida ikkalasini belgilab olamiz
+
   constructor() {
     this.orderModel = OrderModel;
     this.orderItemModel = OrderItemModel;
@@ -37,13 +36,10 @@ class OrderService {
       return acc + input.itemPrice * input.itemQuantity;
     }, 0);
     const delivery = amount < 100 ? 5 : 0;
-    // console.log("delivery:", delivery);
-    // console.log("amount:", amount);
-
-    // ?? bu yerda nega try catch ishlatyabmiz
+   // database validationda xato bolsa ozimizi cutsom errorni berish 
     try {
       console.log("orderModel.create");
-      const newOrder: Order = await this.orderModel.create({
+      const newOrder: any = await this.orderModel.create({
         orderTotal: amount + delivery,
         orderDeleviry: delivery,
         memberId: memberId,
@@ -121,6 +117,9 @@ class OrderService {
           _id: orderId,
         })
         .exec();
+        if (!check) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
+
     if (check.orderStatus !== OrderStatus.PAUSE) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
     } else {

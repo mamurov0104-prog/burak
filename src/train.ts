@@ -1,3 +1,18 @@
+function randomBetween(a: number, b: number): number {
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+console.log(randomBetween(1, 30));
+console.log(randomBetween(50, 30));
+console.log(randomBetween(-10, 10));
+
+
+
+
+
 /* 
 ZA-TASK
 
@@ -5,16 +20,16 @@ Shunday function yozing, u array ichidagi objectlarni “age” qiymati boyicha 
 
 @MITASK
 */
-function sortByAge(arr: { age: number }[]): { age: number }[] {
-  return arr.sort((a, b) => a.age - b.age);
-}
-const result = sortByAge([
-  { age: 45 },
-  { age: 22 },
-  { age: 19 },
-]);
+// function sortByAge(arr: { age: number }[]): { age: number }[] {
+//   return arr.sort((a, b) => a.age - b.age);
+// }
+// const result = sortByAge([
+//   { age: 45 },
+//   { age: 22 },
+//   { age: 19 },
+// ]);
 
-console.log(result);
+// console.log(result);
 /**
 Z-TASK
 
