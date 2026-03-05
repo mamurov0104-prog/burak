@@ -12,52 +12,94 @@ const productController:T={};
 /* >-----< SPA >-----< */
 
 // -------------------------------- > getProducts get started < -----------------------------------
-       productController.getProducts = async (req:Request,res:Response) =>{
-             try{
+productController.getProducts = async (req: Request, res: Response) => {
+  try {
+    // Frontenddan kelgan request shu yerga keladi
+    console.log("Coming getProducts Page!");
 
-            console.log("Coming  getProducts Page!");
-            const{page, limit, order, productCollection, search} = req.query;
-            const inquiry:ProductInquiry ={
-                order: String(order),
-                page: Number(page),
-                limit: Number(limit),
-            };
-            if(productCollection) inquiry.productCollection = productCollection as ProductCollection;
-            if(search) inquiry.search = String(search)
-            const result = await productService.getProducts(inquiry);
-            res.status(HttpCode.OK).json({result:result})
-            }catch(err){
-            
-            console.log("Error, getProducts :",err);
-            if(err instanceof Errors) res.status(err.code).json(err)
-                else res.status(Errors.standard.code).json(Errors.standard);
+    // URL query parameterlarini ajratib olyapmiz
+    // Masalan: /product/all?page=1&limit=3&order=productPrice
+    const { page, limit, order, productCollection, search } = req.query;
 
-            }
+    // Frontenddan kelgan query ma’lumotlarini 
+    // service qatlamiga uzatish uchun maxsus object tayyorlayapmiz
+    const inquiry: ProductInquiry = {
+      order: String(order),   // qaysi field bo‘yicha sort qilish
+      page: Number(page),     // pagination uchun page
+      limit: Number(limit),   // nechta product chiqarish
+    };
+
+    // Agar product collection bo‘lsa (masalan: DRINK, Salad)
+    if (productCollection)
+      inquiry.productCollection = productCollection as ProductCollection;
+
+    // Agar search kelgan bo‘lsa (masalan: cola)
+    if (search)
+      inquiry.search = String(search);
+
+    //  MUHIM QISM:
+    // ProductService objectining getProducts metodini chaqirdik
+    // va unga argument sifatida inquiry objectini yubordik
+    const result = await productService.getProducts(inquiry);
+
+    // Service dan kelgan natijani frontendga json ko‘rinishda qaytardik
+    res.status(HttpCode.OK).json({ result: result });
+
+  } catch (err) {
+
+    console.log("Error, getProducts :", err);
+
+    // Agar custom error bo‘lsa shuni qaytaramiz
+    if (err instanceof Errors)
+      res.status(err.code).json(err);
+    else
+      res.status(Errors.standard.code).json(Errors.standard);
+  }
 }
 // -------------------------------- > getProducts get end < -----------------------------------
 
-
 // -------------------------------- > getProduct get started < -----------------------------------
-       productController.getProduct = async (req:ExtendedRequest,res:Response) =>{
-             try{
+/**
+ * @function getProduct
+ * @description
+ * Bu controller metodi frontenddan kelgan "bitta product" so'rovini qabul qiladi,
+ * service layerga yuboradi va natijani JSON ko'rinishida frontendga qaytaradi.
+ * Shu bilan birga, agar foydalanuvchi login qilgan bo'lsa,
+ * productni kim ko'rganini view logging orqali saqlaydi.
+ */
+productController.getProduct = async (req: ExtendedRequest, res: Response) => {
+  try {
+    // --- Qadam 1: Log console
+    console.log("Coming getProduct Page!");
 
-            console.log("Coming  getProduct Page!");
-            const { id } = req.params;
-            const memberId = req.member?._id ?? null;
-            const result = await productService.getProduct(memberId,id);
-            res.status(HttpCode.OK).json({result:result})
+    // --- Qadam 2: URL paramsdan product IDni olish
+    const { id } = req.params;
 
-            }
-            catch(err){
-            
-            console.log("Error, getProducts :",err);
-            if(err instanceof Errors) res.status(err.code).json(err)
-                else res.status(Errors.standard.code).json(Errors.standard);
+    // --- Qadam 3: Agar member login qilgan bo'lsa, ularning ID sini olish
+    const memberId = req.member?._id ?? null;
 
-            }
-}
+    // --- Qadam 4: ProductService objectining getProduct metodini chaqiramiz
+    // va unga argument sifatida "memberId" va "product id" ni yuboramiz
+    // Bu metod service layerda productni DBdan olib keladi
+    const result = await productService.getProduct(memberId, id);
+
+    // --- Qadam 5: Natijani frontendga qaytarish
+    res.status(HttpCode.OK).json({ result: result });
+
+  } catch (err) {
+    // --- Qadam 6: Xatolikni consolega chiqarish
+    console.log("Error, getProduct :", err);
+
+    // --- Qadam 7: Agar xatolik bizning custom Errors classidan bo'lsa
+    // shunchaki uning code va message bilan qaytamiz
+    if (err instanceof Errors)
+      res.status(err.code).json(err);
+    else
+      // --- Aks holda standard xatolik qaytamiz
+      res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
 // -------------------------------- > getProduct get end < -----------------------------------
-
 
 /* >-----< BSSR  started>-----< */
 

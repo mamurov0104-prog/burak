@@ -3,6 +3,7 @@ const router = express.Router();
 import memberController from "./controllers/member.controller";
 import uploader from "./libs/utils/uploader";
 import productController from "./controllers/product.controller";
+import orderControllor from "./controllers/order.controller";
 //** MEMBER */
 router.get("/member/restaurant", memberController.getRestaurant);
 router.post("/member/signup", memberController.signup);
@@ -38,10 +39,28 @@ router.get("/member/top-users", memberController.getTopUsers);
 //** PRODUCT */
 
 router.get("/product/all" , productController.getProducts);
+
 router.get("/product/:id" ,
    memberController.retrieveAuth ,
     productController.getProduct);
 
+
 //** ORDERS */
+router.post(
+  "/order/create",
+  memberController.verifyAuth,
+  orderControllor.createOrder,
+);
+router.get(
+  "/order/all",
+  memberController.verifyAuth,
+  orderControllor.getMyOrders,
+);
+
+router.post(
+  "/order/update",
+  memberController.verifyAuth,
+  orderControllor.updateOrder,
+);
 
 export default router;

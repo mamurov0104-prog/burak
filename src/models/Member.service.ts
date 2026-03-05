@@ -212,6 +212,28 @@ public async updateMember(
 }
 
 // ---------------------------- < updateMember FINISHED > ----------------------------
+// ---------------------------- < addUserPoint started > ----------------------------
+
+
+
+  public async addUserPoint(member: Member, point: number): Promise<any> {
+    const memberId = shapeIntoMongooseObjectId(member._id);
+
+    return await this.memberModel
+      .findOneAndUpdate(
+        {
+          _id: memberId,
+          memberType: MemberType.USER,
+          memberStatus: MemberStatus.ACTIVE,
+        },
+        { $inc: { memberPoints: point } },
+        { new: true },
+      )
+      .exec();
+  }
+
+// ---------------------------- < addUserPoint FINISHED > ----------------------------
+
 
     // ---------------------------- < SPA FINISHED > ----------------------------
 
