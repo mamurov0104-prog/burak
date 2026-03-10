@@ -1,13 +1,22 @@
-function randomBetween(a: number, b: number): number {
-  const min = Math.min(a, b);
-  const max = Math.max(a, b);
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function celsiusToFahrenheit(celsius: number): number {
+  return (celsius * 9) / 5 + 32;
 }
+console.log(celsiusToFahrenheit(0));  
+console.log(celsiusToFahrenheit(25));  
+console.log(celsiusToFahrenheit(100)); 
 
-console.log(randomBetween(1, 30));
-console.log(randomBetween(50, 30));
-console.log(randomBetween(-10, 10));
+
+
+// function randomBetween(a: number, b: number): number {
+//   const min = Math.min(a, b);
+//   const max = Math.max(a, b);
+
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+
+// console.log(randomBetween(1, 30));
+// console.log(randomBetween(50, 30));
+// console.log(randomBetween(-10, 10));
 
 
 

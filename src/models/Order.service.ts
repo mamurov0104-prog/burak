@@ -216,6 +216,9 @@ private async recordOrderItem(
 
       // ---------- STAGE 5: $lookup → orderItems ----------
       // Maqsad: orderItems collection bilan join qilish
+      /*
+        Har bir order uchun: orders._id  ===  orderItems.orderId mos kelgan orderItemlarni to
+      */
       { 
         $lookup: { 
           from: "orderItems",            // DB collection nomi
@@ -230,6 +233,8 @@ private async recordOrderItem(
 
       // ---------- STAGE 6: $lookup → products ----------
       // Maqsad: har bir orderItem.productId bilan products collectionni join qilish
+      /*Bu nima qiladi?
+        Endi har bir order ichida orderItems.productId bor. U shuni products._id bilan solishtiradi. */
       { 
         $lookup: { 
           from: "products",                  // DB collection nomi
@@ -258,25 +263,34 @@ private async recordOrderItem(
 // ------------------------------------ < updateOrder started > ------------------------------------
 
 
-  public async updateOrder(member: Member, input: OrderUpdateInput): Promise<any> {
-  
+// updateOrder metodini e'lon qilamiz (order statusni yangilash uchun)
+public async updateOrder(member: Member, input: OrderUpdateInput): Promise<any> {
+
+  // member._id ni MongoDB ObjectId formatiga o‘tkazamiz
   const memberId = shapeIntoMongooseObjectId(member._id);
+
+  // inputdan kelgan orderId ni MongoDB ObjectId formatiga o‘tkazamiz
   const orderId = shapeIntoMongooseObjectId(input.orderId);
+
+  // requestdan kelgan orderStatus ni olamiz
   const orderStatus = input.orderStatus;
+
+  // orderModel orqali orderni topib, orderStatusni yangilaymiz
   const result = await this.orderModel.findOneAndUpdate(
-      { memberId: memberId, _id: orderId }, 
-      { orderStatus: orderStatus },         
-      { new: true }                          
-    ).exec(); 
+      { memberId: memberId, _id: orderId }, // qidirish sharti: memberId va orderId mos bo‘lsin
+      { orderStatus: orderStatus },        // yangilash: orderStatus ni o‘zgartiramiz
+      { new: true }                         // new:true → yangilangan documentni qaytaradi
+    ).exec(); // queryni execute qilamiz
 
-  
-    if (orderStatus === OrderStatus.PROCESS) {
+  // agar orderStatus PROCESS bo‘lsa — userga 1 ball qo‘shamiz
+  if (orderStatus === OrderStatus.PROCESS) {
       await this.memberService.addUserPoint(member, 1);
-     }
-// ------------------------------------ < updateOrder finished > ------------------------------------
-    return result;
+  }
 
+  // yangilangan orderni qaytaramiz
+  return result;
 }
+// ------------------------------------ < updateOrder finished > ------------------------------------
 
 }
 

@@ -60,7 +60,7 @@ orderControllor.getMyOrders = async (req: ExtendedRequest, res: Response) => {
     console.log("ERROR getMyOrders:", err); // error log
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
-  }
+  }.0
 };
 
 // ======================

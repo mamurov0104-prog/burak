@@ -216,22 +216,25 @@ public async updateMember(
 
 
 
-  public async addUserPoint(member: Member, point: number): Promise<any> {
-    const memberId = shapeIntoMongooseObjectId(member._id);
+ // addUserPoint metodini e'lon qilamiz (userga point qo‘shish uchun)
+public async addUserPoint(member: Member, point: number): Promise<any> {
 
-    return await this.memberModel
-      .findOneAndUpdate(
-        {
-          _id: memberId,
-          memberType: MemberType.USER,
-          memberStatus: MemberStatus.ACTIVE,
-        },
-        { $inc: { memberPoints: point } },
-        { new: true },
-      )
-      .exec();
-  }
+  // member._id ni MongoDB ObjectId formatiga o‘tkazamiz
+  const memberId = shapeIntoMongooseObjectId(member._id);
 
+  // memberModel orqali userni topib, memberPoints ni oshiramiz
+  return await this.memberModel
+    .findOneAndUpdate(
+      {
+        _id: memberId,                 // user ID mos bo‘lsin
+        memberType: MemberType.USER,    // faqat USER tipidagi member
+        memberStatus: MemberStatus.ACTIVE, // faqat ACTIVE statusdagi user
+      },
+      { $inc: { memberPoints: point } },  // memberPoints ni +point ga oshiramiz
+      { new: true },                      // yangilangan documentni qaytaramiz
+    )
+    .exec(); // queryni execute qilamiz
+}
 // ---------------------------- < addUserPoint FINISHED > ----------------------------
 
 
