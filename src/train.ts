@@ -1,9 +1,25 @@
-function celsiusToFahrenheit(celsius: number): number {
-  return (celsius * 9) / 5 + 32;
+function changeNumberInArray(
+  index: number,
+  arr: number[],
+  newNumber: number
+): number[] {
+  
+  arr[index] = newNumber;
+
+  return arr;
 }
-console.log(celsiusToFahrenheit(0));  
-console.log(celsiusToFahrenheit(25));  
-console.log(celsiusToFahrenheit(100)); 
+
+const result = changeNumberInArray(1, [1, 3, 4, 5 , 6 , 7], 2);
+
+console.log(result);
+
+
+// function celsiusToFahrenheit(celsius: number): number {
+//   return (celsius * 9) / 5 + 32;
+// }
+// console.log(celsiusToFahrenheit(0));  
+// console.log(celsiusToFahrenheit(25));  
+// console.log(celsiusToFahrenheit(100)); 
 
 
 

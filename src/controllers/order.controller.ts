@@ -11,15 +11,11 @@ const orderService = new OrderService();
 
 const orderControllor: T = {}; 
 
-// Create Order endpoint
 orderControllor.createOrder = async (req: ExtendedRequest, res: Response) => {
   try {
-    console.log("createOrder"); // log: createOrder endpoint chaqildi
+    console.log("createOrder"); 
 
-    // orderService objectimizning createOrder metodini chaqirib (call qilib)
-    // unga argument sifatida:
-    // 1-argument: login qilgan member (req.member)
-    // 2-argument: frontenddan kelgan orderItemlar (req.body)
+ 
     const result = await orderService.createOrder(req.member, req.body);
 
  
@@ -34,9 +30,7 @@ orderControllor.createOrder = async (req: ExtendedRequest, res: Response) => {
   }
 };
 
-// ======================
-// Get My Orders endpoint
-// ======================
+
 orderControllor.getMyOrders = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("getMyOrders"); 

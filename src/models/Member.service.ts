@@ -212,6 +212,29 @@ public async updateMember(
 }
 
 // ---------------------------- < updateMember FINISHED > ----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ---------------------------- < addUserPoint started > ----------------------------
 
 
@@ -236,6 +259,37 @@ public async addUserPoint(member: Member, point: number): Promise<any> {
     .exec(); // queryni execute qilamiz
 }
 // ---------------------------- < addUserPoint FINISHED > ----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // ---------------------------- < SPA FINISHED > ----------------------------

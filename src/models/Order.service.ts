@@ -32,13 +32,8 @@ class OrderService {
 
 
 
- // ======================
-// createOrder metod
-// ======================
 // Maqsad: frontenddan kelgan order itemlarni DBga yozish va yangi order yaratish
-// Kirish:
-//   1) member → login qilgan user object
-//   2) input → array of OrderItemInput (frontenddan keladi)
+
 // Chiqish:
 //   - Yaratilgan order object (DB document)
 // Qayerga ketadi:
@@ -48,9 +43,7 @@ public async createOrder(
   input: OrderItemInput[],    // frontenddan kelgan order itemlar
 ): Promise<Order> {
 
-  // ======================
   // STEP 1: Inputni log qilish
-  // ======================
   // Kirish: frontenddan kelgan array
   // Chiqish: log console ga chiqariladi
   console.log("input:", input);
@@ -62,9 +55,13 @@ public async createOrder(
   // Chiqish: MongoDB ObjectId → DB query uchun
   const memberId = shapeIntoMongooseObjectId(member._id);
 
-  // ======================
   // STEP 3: Order summasini hisoblash
-  // ======================
+  /*reduce() — array ichidagi barcha elementlarni bitta qiymatga aylantirish uchun ishlatiladi.
+  Bu yerda:
+  Ko‘p orderItemlardan Bitta umumiy summa (amount) hosil qilinyapti. 
+  ya'ni reduce() har bir order item uchun narx × sonini hisoblab, barchasini bitta umumiy summaga qo‘shadi.
+   0 — boshlang‘ich summa, acc esa har aylanishda yig‘ilib boradigan jami pul miqdori.
+  */
   // Kirish: input array
   // Chiqish: total amount
   // Logic: har bir item narxi * quantity → summaga qo‘shiladi
@@ -72,9 +69,7 @@ public async createOrder(
     return acc + input.itemPrice * input.itemQuantity;
   }, 0);
 
-  // ======================
   // STEP 4: Delivery cost hisoblash
-  // ======================
   // Kirish: amount
   // Chiqish: delivery (agar amount < 100 → 5, aks holda 0)
   const delivery = amount < 100 ? 5 : 0;
@@ -91,42 +86,23 @@ public async createOrder(
       memberId: memberId,             // login qilgan user
     });
 
-    // ======================
-    // STEP 6: Yaratilgan orderId ni log qilish
-    // ======================
     console.log("OrderId:", newOrder._id);
     const orderId = newOrder._id;
 
-    // ======================
-    // STEP 7: Order items DBga yozish
-    // ======================
-    // recordOrderItem metodini chaqiramiz
-    // Kirish: orderId va input array
-    // Chiqish: orderItems collectionga yoziladi
+
     await this.recordOrderItem(newOrder._id, input);
 
-    // ======================
-    // STEP 8: Natija return qilish
-    // ======================
-    // return: yangi yaratilgan order object
+   
     return newOrder;
 
   } catch (error) {
-    // ======================
-    // STEP 9: DB error bo‘lsa → custom error throw
-    // ======================
+
     console.log("Error, model : createOrder:", error);
     throw new Errors(HttpCode.BAD_REQUEST, Message.CREATED_FAILED);
   }
 }
 
-// ======================
-// recordOrderItem (private metod)
-// ======================
-// Maqsad: order itemlarni alohida collectionga yozish
-// Kirish: orderId va frontenddan kelgan itemlar
-// Chiqish: void (DBga yoziladi)
-// Qayerga ketadi: DB → orderItems collection
+
 private async recordOrderItem(
   orderId: ObjectId,           // order document ID
   input: OrderItemInput[],      // frontenddan kelgan itemlar
@@ -136,6 +112,11 @@ private async recordOrderItem(
   // STEP 1: Har bir item uchun async create
   // ======================
   // map bilan barcha itemlarni async create qilamiz
+      /* input — array
+    map() — har bir element ustida ishlaydi
+    async — har biri alohida async operatsiya
+    Natijada:
+    promisedList = Promise lar ro‘yxati bo‘ladi. */
   const promisedList = input.map(async (item: OrderItemInput) => {
 
     // orderId qo‘shiladi → har item qaysi orderga tegishli ekanligi
@@ -147,7 +128,6 @@ private async recordOrderItem(
     // DBga yoziladi
     await this.orderItemModel.create(item);
 
-    // Promise return qilinadi
     return "Inserted";
   });
 
@@ -155,15 +135,24 @@ private async recordOrderItem(
   // STEP 2: Promisesni log qilish
   // ======================
   console.log("promisedList:", promisedList);
+    /*Ya’ni bu hali tugamagan async operatsiyalar.
 
+    ⚠ Bu yerda hali DB yozish tugamagan bo‘ladi. */
   // ======================
   // STEP 3: Barcha async create tugashini kutish
+  /*Bu nima qiladi?
+
+    Promise.all() barcha Promise larni parallel ishga tushiradi
+    va hammasi tugaguncha kutadi
+    Agar 3 ta item bo‘lsa:
+    1-item yoziladi
+    2-item yoziladi
+    3-item yoziladi
+    Hammasi tugagandan keyingina keyingi qator ishlaydi. */
   // ======================
   const orderItemState = await Promise.all(promisedList);
 
-  // ======================
-  // STEP 4: Natijani log qilish
-  // ======================
+
   console.log("orderItemState:", orderItemState);
 }
 
