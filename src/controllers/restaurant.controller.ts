@@ -1,324 +1,167 @@
-console.log(" RESTAURANT CONTROLLER LOADED");
-import { Request,Response,NextFunction} from "express";
-import {T} from "../libs/types/common";
-import MemberService from "../models/Member.service";
-import { MemberInput , LoginInput, AdminRequest } from "../libs/types/member";
-import { MemberType } from "../libs/enums/member.enum";
-import Errors, { HttpCode, Message } from "../libs/Errors";
-import { error } from "console";
-const memberService = new MemberService();
-const restaurantController:T={};
+import {NextFunction, Request, Response} from 'express';
+import { T } from "../libs/types/common";
+import  MemberService  from "./../models/Memeber.service";
+import { AdminRequest, LoginInput, MemberInput } from '../libs/types/members';
+import { MemberType } from '../libs/enums/member.enum';
+import { HttpCode, Message } from '../libs/Errors';
+import Errors from '../libs/Errors';
 
-restaurantController.goHome=(req:Request,res:Response)=>{
+        const memberService = new MemberService();
 
-    try{
-      res.render("home");
-    //  res.send("Home page");
-     console.log("Coming HomePage!");
-     // Logon , service model , ...
-    }catch(err){
-      console.log("Error, goHome :",err);
-      res.redirect("/admin")
+
+const restaurantController: T = {};
+restaurantController.goHome =  (req: Request, res: Response) => {
+    try {
+        console.log("goHome");
+         res.render("home")      
+    } catch (error) {
+        console.log('Error, goHome:', error);
+                res.redirect("/admin");
 
     }
 
-}
+};
+restaurantController.getSignup =  (req: Request, res: Response) => {
+    try {
+        console.log("getSignup");
 
-
-
-restaurantController.getLogin=(req:Request,res:Response)=>{
-
-    try{
-     console.log("Coming LoginPage!");
-
-    //  res.send("login page");
-
-      res.render("login");
-
-    }catch(err){
-      console.log("Error, goLogin :",err);
-      res.redirect("/admin")
+        res.render('signup')     
+    } catch (error) {
+        console.log('Error, getSignup:', error);
+                res.redirect("/admin");
 
     }
 
-}
+};
 
-
-restaurantController.getSignup=(req:Request,res:Response)=>{
-
-    try{
-     console.log("Coming SignUp Page!");
-
-    //  res.send("signUp page");
-      res.render("signup");
-
-
-    }catch(err){
-      console.log("Error, signUp :",err);
-      res.redirect("/admin")
+restaurantController.getLogin =  (req: Request, res: Response) => {
+    try {
+        console.log("getLogin");
+         res.render('login')       
+    } catch (error) {
+        console.log('Error, getLogin:', error);
+        res.redirect("/admin");
     }
 
-}
-
-// -------------------------
-
-restaurantController.processSignup= async (req:AdminRequest,res:Response)=>{
-    /*Controllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
-    req:AdminbRequest va res:response (typeni ozimiz belgilab olganmiz bularni )
-
-    try catch error handling standardidan foydalandik maqsad errorni qolga 
-    olish agar error bolsa
-    */
-
-    try{
-     console.log("Coming process SignUp Page!");
-     console.log("Body :", req.body);
-      const file = req.file;
-      console.log("file :",file);
-      if(!file) throw new Errors(HttpCode.BAD_REQUEST,Message.SOMETHING_WENT_WRONG);
-      console.log("file :",file);
-      const newMember:MemberInput = req.body;
-      newMember.memberImage = file?.path.replace(/\\/g, '');// agar teskasi bolsa togirlab beradi;
-      // request ichida kelyatgan
-      //  bodyni yangi newMember degankonstantaga tenglab oldik va uniy 
-      // type MemberInputga tenf
-      newMember.memberType = MemberType.RESTAURANT; // hamda osha newMember konstantamizni 
-    //  ichidagi memberTypeni MemberType enum ichidagi Restaurant degan qiymat bn boyitdik
-     const result = await memberService.processSignup(newMember);
-          /*
-          Va keyingi qatorda, memberService objectini processSignup methodini chaqirib
-      unga newMember objectini argument sifatida tashladik. Va uni javobini kutib
-      (await) natijani result konstantasiga saqladik
-          */
-
-      /* Hamda yakunda o’sha result objectimizni clientga jo’natib yubordik (yani shu data
-      // bn clientga javob berdik)*/
-        req.session.member = result;
-        req.session.save(function(){
-        res.redirect("/admin/product/all");
-        });
-         // resultga tenglaguncha vaqt ketadi yani
-        //bzning frontendimizga (postmanga) borib cookies ni ichiga 
-        // stickni joylab keladi , keyin sessions collectionimizga manabu
-        //  result data(memberdata)ni borib saqlaydi , shuning uchun har ikkala process
-        //  amalga oshishi uchun 
+};
 
 
-    }catch(err){
-      console.log("Error, process signUp :",err);
-      
-        const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-       res.send(`<script>alert("${message}; window.location.replace('/admin/signup')")</script>`);
+restaurantController.processSignup = async (req: AdminRequest, res: Response) => {
+    try {
+        console.log("processSignup");
+        const file = req.file;
+        if (!file) throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
 
-    }
+        const newMember: MemberInput = req.body;
+        newMember.memberImage = file?.path.replace(/\\/g, "/");
+        newMember.memberType = MemberType.RESTAURANT;
+        const result = await memberService.processSignup(newMember);
 
-}
-
-// ------------------------------ < login POST started  > --------------------------------------------
-
-restaurantController.processLogin = async(req:AdminRequest,res:Response)=>{
-    /*Kontrollerimiz asinxron methotda shakillantirilgan. Buni 2 ta parametri bor ular
-    req (request) va res (response), type larini o’zimiz biriktirib ketganmiz (type
-    aytilmasa ham bo’ladi) */
-    try{
-      /*Keyin try hamda catch blogidan foydalandik, buning eng muhum sababi - error
-    handling (xatolarni boshqarish, ushlash) uchun */
-     console.log("Coming processLogin!", req.body); 
-     /*Aynan shu kantrollerga yetib kelganligini bilish maqsadida o’zimiz 
-     uchun log qoldirdik. */
-    //  throw new Error("Forced stop ! ")
-     
-      const input: LoginInput = req.body;
-      /* frontendan kelyatgan data (req.body) ni inputga tenglab oldik va 
-      uning typeni biz LoginInput deb belgilab oldik
-      Bu ma’lumotlar req.body orqali controllerga keladi :
-            {"memberNick": "restaurant1",
-            "memberPassword": "123456"}
-                                  
-      */
-      const result = await memberService.processLogin(input);
-      /*member service modeldan hosil qilgan opjectimizni processLogin metodiga argument sifatida 
-      pass qilyabmiz va u member.sevice ketib  */
-      
-        req.session.member = result;
-        req.session.save(function(){
-        // res.send(result);
-        res.redirect("/admin/product/all");
-
+                // TODO: SESSIONS
+                req.session.member = result;
+                req.session.save( function () {
+                      res.redirect("/admin/product/all");   
+                });
+             
+    } catch (error) {
+        console.log('Error, getSignup:', error);
+                const message = error instanceof Errors ? error.message : Message.SOMETHING_WENT_WRONG
+        res.send(`  <script>alert('Hi, ${message}'); window.location.replace('/admin/signup')</script>`); 
        
-
-        });
-    //  res.send(result);
-
-
-    }catch(err){
-      console.log("Error, processLogin :",err);
-       const message = err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
-       res.send(`<script>alert("${message}"); window.location.replace('/admin/login')</script>`);
     }
 
-}
+};
 
-// ------------------------------------------------------- < login POST finished  > --------------------------------------------
+restaurantController.processLogin =  async(req: AdminRequest, res: Response) => {
+    try {
+        console.log("getLogin");
+        const input: LoginInput = req.body;
+        const result = await memberService.processLogin(input);
+        
+                // TODO: SESSIONS AUTHENTICATION
+                  req.session.member = result;
+                req.session.save( function () {
+                    res.redirect("/admin/product/all");
+                });
+             
+           
+    } catch (error) {
+        console.log('Error, getSignup:', error);
+        const message = error instanceof Errors ? error.message : Message.SOMETHING_WENT_WRONG
+        res.send(`  <script>alert("Hi, ${message}"); window.location.replace('/admin/login')</script>`); 
+       }
 
-// ------------------------------------------------------- < logOut GET started  > --------------------------------------------
+};
 
+restaurantController.logout=  async(req: AdminRequest, res: Response) => {
+    try {
+        console.log("logout");
+        req.session.destroy(function () {
+            res.redirect("/admin")
+        })
+           
+    } catch (error) {
+        console.log('Error, logout:', error);
+        res.send(error);
+                    res.redirect("/admin")
 
-restaurantController.logout = async(
-  req:AdminRequest,
-  res:Response)=>{
-    try{
-     console.log("Coming LogOut!");
-    req.session.destroy(function(){
-    res.redirect("/admin")
-    });
-
-    }catch(err){
-      console.log("Error, logout :",err);
-      res.send(err);
     }
 
-}
+};
 
-
-
-// ------------------------------------------------------- < logOut GET finished  > --------------------------------------------
-
-
-
-// ------------------------------------------------------- < getUsers GET started  > --------------------------------------------
-
-
-restaurantController.getUsers = async(
-  req:AdminRequest,
-  res:Response)=>{
-       /**
-         * Bu controller method HTTP GET /user/all
-         * request kelganda ishga tushadi
-         */
-    try{
-     console.log("Coming getUser!");
-      /**
-         * Controller Service ga murojaat qiladi
-         * Chunki:
-         * - Controller DB bilan ishlamasligi kerak
-         * - Barcha biznes logika Service da bo‘ladi
-         */
-    const result = await memberService.getUsers();
-
-     console.log("result", result);
-  /**
-         * Service dan qaytgan tayyor ma’lumot
-         * view (EJS) ga uzatiladi
-         */
-    res.render("users",{users:result});
-     
-    }catch(err){
-        /**
-         * Agar Service xato tashlasa (throw),
-         * Controller uni tutib oladi
-         */
-      console.log("Error, getUser :",err);
-      res.redirect("/admin/login");
+restaurantController.getUsers =  async(req: Request, res: Response) => {
+    try {
+        console.log("getUsers");
+        const result = await memberService.getUsers();
+        
+         res.render('users', {users: result});       
+    } catch (error) {
+        console.log('Error, getUsers:', error);
+        res.redirect("/admin/login");
     }
 
-}
+};
 
-
-
-// ------------------------------------------------------- < getUser GET finished  > --------------------------------------------
-// ------------------------------------------------------- < updateChosenUser GET started  > --------------------------------------------
-
-
-restaurantController.updateChosenUser = async(
-  req:AdminRequest,
-  res:Response)=>{
-    
-    try{
-     console.log("Coming updateChosenUser!");
-     
-        /**
-         * req.body ichida frontenddan kelgan
-         * user ma’lumotlari bo‘ladi
-         *
-         * Misol:
-         * {
-         *   _id: "65f123abc...",
-         *   memberStatus: "ACTIVE",
-         *   memberNick: "Ali"
-         * }
-         */
-
-        /**
-         * Controller bu ma’lumotlarni o‘zi qayta ishlamaydi
-         * va DB ga yozmaydi
-         *
-         * Sababi:
-         * - Controller faqat HTTP layer
-         * - Biznes logika Service da bo‘lishi shart
-         */
-    const result = await memberService.updateChosenUser(req.body);
-    /**
-         * Agar Service muvaffaqiyatli natija qaytarsa
-         * controller client ga 200 OK bilan javob beradi
-         */
-    res.status(HttpCode.OK).json({data: result})
-    
-
-    }catch(err){
-      console.log("Error, updateChosenUser :",err);
-      /**
-         * Agar Service ichida error throw qilingan bo‘lsa,
-         * controller bu yerda uni tutib oladi
-         */
-     if(err instanceof Errors) res.status(err.code).json(err)
-     else res.status(Errors.standard.code).json(Errors.standard);
+restaurantController.updateChosenUser = async (req: Request, res: Response) => {
+    try {
+        console.log("updateChosenUser");
+        const result = await memberService.updateChosenUser(req.body);
+        res.status(HttpCode.OK).json({ data: result });
+    } catch (error) {
+        console.log('Error, updateChosenUser:', error);
+        if(error instanceof Errors) res.status(error.code).json(error);
+        else res.status(Errors.standard.code).json(Errors.standard);
     }
 
-}
+};
 
 
+restaurantController.checkAuthSession =  async(req: AdminRequest, res: Response) => {
+    try {
+        console.log("checkAuthSession");
+            
+        if (req.session?.member) res.send(`  <script>alert("Hi, ${req.session.member.memberNick}")</script>`);
+        else res.send(`<script>alert("${Message.NOT_AUTHENTICATED}")</script>`);
 
-// ------------------------------------------------------- < updateChosenUser GET finished  > --------------------------------------------
-
-
-
-// ----------------------  test  -----------------------------------
-
-restaurantController.checkAuthSession = async(
-  req:AdminRequest,
-  res:Response)=>{
-
-    try{
-      console.log("checkAuthSession is loaded")
-if(req.session?.member){
-  res.send(`<script>alert("${req.session.member.memberNick}")</script>`);
-}
-else res.send(`<script>alert("${Message.NOT_AUTHONTICATED}")</script>`);
-
-    }catch(err){
-      console.log("Error, checkAuthSession :",err);
-      res.send(err);
+           
+    } catch (error) {
+        console.log('Error, checkAuthSession:', error);
+        res.send(error);
     }
 
-}
-// ------------------------------------------------ verify ----------------------------
+};
 
-restaurantController.verifyRestaurant = (
-  req:AdminRequest,
-  res:Response,
-  next: NextFunction 
-) =>{
+restaurantController.verifyRestaurant = (req: AdminRequest, 
+    res:  Response, next: NextFunction) =>  {
 
-    
-    if(req.session?.member?.memberType === MemberType.RESTAURANT){
-      req.member = req.session.member;
-      next();
+        if(req.session?.member?.memberType === MemberType.RESTAURANT) {
+            
+            req.member = req.session.member;
+            
+            next();
+        } else {
+        const message = Message.NOT_AUTHENTICATED;
+       res.send(`<script>alert("${message}"); window.location.replace('/admin/login');</script>`)
     }
-    else{
-      const message = Message.NOT_AUTHONTICATED;
-     res.send(`<script>alert("${Message.NOT_AUTHONTICATED}"); window.location.replace('/admin/login')</script>`)
     }
-}
-
 export default restaurantController;

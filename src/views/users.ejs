@@ -60,24 +60,20 @@
                 <th scope="col">Status</th>
               </tr>
             </thead>
-            <!--  LOOP PRODUCTS: START  -->
-              <% users.map(function(value, key) { %>
-                 <tbody style="background: white">
-              <td><%= key+1  %></td>
-              <td><%= value.memberNick %></td>
-              <td><%= value.memberPhone %></td>
+              <%users.map((e, i) => { %>
+            <tbody style="background: white">
+              <td><%= i + 1 %></td>
+              <td><%= e.memberNick %></td>
+              <td><%= e.memberPhone %></td>
               <td style="width: 13%">
-              <select class="spec-select member-status" id="<%= value._id %>">
-                <option value="ACTIVE" <%= value.memberStatus === 'ACTIVE' ? 'selected' : '' %>>ACTIVE</option>
-                <option value="BLOCK" <%= value.memberStatus === 'BLOCK' ? 'selected' : '' %>>BLOCK</option>
-                <option value="DELETE" <%= value.memberStatus === 'DELETE' ? 'selected' : '' %>>DELETE</option>
-              </select>
-            </td>
-
+                <select class="spec-select member-status" id="<%= e._id %>">
+                  <option value="ACTIVE" <%= e.memberStatus === "ACTIVE" ? 'selected' : '' %> >ACTIVE</option>
+                  <option value="BLOCK" <%= e.memberStatus === "BLOCK" ? 'selected' : '' %> >BLOCK</option>
+                  <option value="DELETE" <%= e.memberStatus === "DELETE" ? 'selected' : '' %> >DELETE</option>
+                </select>
+              </td>
             </tbody>
-             <%  }) %>
-           
-            <!--  LOOP PRODUCTS: END  -->
+            <% }) %>
           </table>
         </div>
       </div>

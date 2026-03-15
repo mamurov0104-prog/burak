@@ -1,85 +1,61 @@
-import { Request, Response } from "express";
-import { T } from "../libs/types/common";
-import { ExtendedRequest } from "../libs/types/member";
 import Errors, { HttpCode } from "../libs/Errors";
+import { T } from "../libs/types/common";
+import { ExtendedRequest } from "../libs/types/members";
+import { Response } from "express";
 import OrderService from "../models/Order.service";
 import { OrderInquiry, OrderUpdateInput } from "../libs/types/order";
 import { OrderStatus } from "../libs/enums/order.enum";
 
-
-const orderService = new OrderService(); 
-
-const orderControllor: T = {}; 
-
-orderControllor.createOrder = async (req: ExtendedRequest, res: Response) => {
-  try {
-    console.log("createOrder"); 
-
- 
-    const result = await orderService.createOrder(req.member, req.body);
-
- 
-    res.status(HttpCode.CREATED).json(result);
-  } catch (err) {
-    console.log("ERROR createOrder:", err);
-
-    // Agar error custom Errors classidan bo‘lsa
-    if (err instanceof Errors) res.status(err.code).json(err);
-    // Aks holda standart errorni qaytaramiz
-    else res.status(Errors.standard.code).json(Errors.standard);
-  }
-};
+const orderController: T = {};
+const orderService = new OrderService();
 
 
-orderControllor.getMyOrders = async (req: ExtendedRequest, res: Response) => {
-  try {
-    console.log("getMyOrders"); 
+orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
+    try {
+        console.log("createOrder");
+        const result = await orderService.createOrder(req.member, req.body);
 
-    // Frontenddan query paramlarni destructuring qilamiz
-    const { page, limit, orderStatus } = req.query;
-
-    // Inquiry object yaratdik, bu service metodiga argument sifatida beriladi
-    const inquiry: OrderInquiry = {
-      page: Number(page), // query string → number
-      limit: Number(limit), // query string → number
-      orderStatus: orderStatus as OrderStatus, // query string → enum
-    };
-
-    // orderService objectimizning getMyOrders metodini chaqirib
-    // unga argument sifatida login qilgan member va inquiry objectini pass qilamiz
-    const result = await orderService.getMyOrders(req.member, inquiry);
-
-    res.status(HttpCode.OK).json(result);
-  } catch (err) {
-    console.log("ERROR getMyOrders:", err); // error log
-    if (err instanceof Errors) res.status(err.code).json(err);
-    else res.status(Errors.standard.code).json(Errors.standard);
-  }.0
-};
-
-// ======================
-// Update Order endpoint
-// ======================
-orderControllor.updateOrder = async (req: ExtendedRequest, res: Response) => {
-  try {
-    console.log("updateOrder"); // log
-
-    // Frontenddan kelgan inputni olamiz (orderId va orderStatus)
-    const input: OrderUpdateInput = req.body;
-    console.log("input:", input); 
-
-    // orderService objectimizning updateOrder metodini chaqirib
-    // unga argument sifatida login qilgan member va update inputni pass qilamiz
-    const result = await orderService.updateOrder(req.member, input);
-
-  
-    res.status(HttpCode.OK).json(result);
-  } catch (err) {
-    console.log("ERROR updateOrder:", err); 
-    if (err instanceof Errors) res.status(err.code).json(err);
-    else res.status(Errors.standard.code).json(Errors.standard);
-  }
-};
+        res.status(HttpCode.OK).json(result);
+    } catch (error) {
+                    console.log('Error, createOrder:', error);
+        if(error instanceof Errors) res.status(error.code).json(error);
+        else res.status(Errors.standard.code).json(Errors.standard);       
+    }
+}
 
 
-export default orderControllor;
+orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
+    try {
+        console.log("getMyOrders");
+
+        const {page, limit, orderStatus} = req.query;
+        const inquiry: OrderInquiry =  {
+            page: Number(page),
+            limit: Number(limit),
+            orderStatus: orderStatus as OrderStatus
+        }
+        const result = await orderService.getMyOrders(req.member, inquiry);
+        console.log(result)
+        res.status(HttpCode.OK).json(result);
+    } catch (error) {
+                    console.log('Error, getMyOrders:', error);
+        if(error instanceof Errors) res.status(error.code).json(error);
+        else res.status(Errors.standard.code).json(Errors.standard);       
+    }
+}
+
+orderController.updateOrder = async (req: ExtendedRequest, res: Response) => {
+    try {
+        console.log("updateOrder");
+        const input: OrderUpdateInput = req.body;
+        const result = await orderService.updateOrder(req.member, input); 
+
+        res.status(HttpCode.OK).json(result);
+    } catch (error) {
+                    console.log('Error, updateOrder:', error);
+        if(error instanceof Errors) res.status(error.code).json(error);
+        else res.status(Errors.standard.code).json(Errors.standard);       
+    }
+}
+
+export default orderController;
