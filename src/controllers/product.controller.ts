@@ -14,7 +14,6 @@ const productController:T={};
 // -------------------------------- > getProducts get started < -----------------------------------
 productController.getProducts = async (req: Request, res: Response) => {
   try {
-    // Frontenddan kelgan request shu yerga keladi
     console.log("Coming getProducts Page!");
 
     // URL query parameterlarini ajratib olyapmiz
@@ -29,7 +28,6 @@ productController.getProducts = async (req: Request, res: Response) => {
       limit: Number(limit),   // nechta product chiqarish
     };
 
-    // Agar product collection bo‘lsa (masalan: DRINK, Salad)
     if (productCollection)
       inquiry.productCollection = productCollection as ProductCollection;
 
@@ -37,19 +35,15 @@ productController.getProducts = async (req: Request, res: Response) => {
     if (search)
       inquiry.search = String(search);
 
-    //  MUHIM QISM:
-    // ProductService objectining getProducts metodini chaqirdik
-    // va unga argument sifatida inquiry objectini yubordik
+
     const result = await productService.getProducts(inquiry);
 
-    // Service dan kelgan natijani frontendga json ko‘rinishda qaytardik
-    res.status(HttpCode.OK).json({ result: result });
+    res.status(HttpCode.OK).json(result);
 
   } catch (err) {
 
     console.log("Error, getProducts :", err);
 
-    // Agar custom error bo‘lsa shuni qaytaramiz
     if (err instanceof Errors)
       res.status(err.code).json(err);
     else
@@ -59,43 +53,26 @@ productController.getProducts = async (req: Request, res: Response) => {
 // -------------------------------- > getProducts get end < -----------------------------------
 
 // -------------------------------- > getProduct get started < -----------------------------------
-/**
- * @function getProduct
- * @description
- * Bu controller metodi frontenddan kelgan "bitta product" so'rovini qabul qiladi,
- * service layerga yuboradi va natijani JSON ko'rinishida frontendga qaytaradi.
- * Shu bilan birga, agar foydalanuvchi login qilgan bo'lsa,
- * productni kim ko'rganini view logging orqali saqlaydi.
- */
+
 productController.getProduct = async (req: ExtendedRequest, res: Response) => {
   try {
     // --- Qadam 1: Log console
     console.log("Coming getProduct Page!");
 
-    // --- Qadam 2: URL paramsdan product IDni olish
     const { id } = req.params;
 
-    // --- Qadam 3: Agar member login qilgan bo'lsa, ularning ID sini olish
     const memberId = req.member?._id ?? null;
 
-    // --- Qadam 4: ProductService objectining getProduct metodini chaqiramiz
-    // va unga argument sifatida "memberId" va "product id" ni yuboramiz
-    // Bu metod service layerda productni DBdan olib keladi
     const result = await productService.getProduct(memberId, id);
 
-    // --- Qadam 5: Natijani frontendga qaytarish
     res.status(HttpCode.OK).json({ result: result });
 
   } catch (err) {
-    // --- Qadam 6: Xatolikni consolega chiqarish
     console.log("Error, getProduct :", err);
 
-    // --- Qadam 7: Agar xatolik bizning custom Errors classidan bo'lsa
-    // shunchaki uning code va message bilan qaytamiz
     if (err instanceof Errors)
       res.status(err.code).json(err);
     else
-      // --- Aks holda standard xatolik qaytamiz
       res.status(Errors.standard.code).json(Errors.standard);
   }
 };
@@ -108,12 +85,7 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
 
         productController.getAllProducts = async (req:Request,res:Response)=>{
 
-              /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
-    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
 
-    try catch error handling standardidan foydalandik maqsad errorni qolga 
-    olish agar error bolsa
-    */
             try{
 
             console.log("Coming  product Page!");
@@ -136,12 +108,7 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
 
 
         productController.createNewProduct = async (req:AdminRequest,res:Response)=>{
-      /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
-    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
-
-    try catch error handling standardidan foydalandik maqsad errorni qolga 
-    olish agar error bolsa
-    */
+  
    console.log("CREATE CONTROLLER HIT");
 
             try{
@@ -149,10 +116,18 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
             console.log("files", req.files);
             if(!req.files?.length) throw new Errors(HttpCode.INTERNAL_SERVER_ERROR, Message.CREATED_FAILED)
              
+// const data: ProductInput = req.body;
 
+// const files = req.files as Express.Multer.File[];
+
+// data.productImages = files.map(file => {
+//   return file.path.replace(/\\/g, "/");
+// });
+
+// console.log("IMAGES:", data.productImages);
                 const data:ProductInput = req.body;
                 data.productImages = req.files?.map(ele =>{
-                    return ele.path.replace(/\\/g, '');// agar teskasi bolsa togirlab
+               return ele.path.replace(/\\/g, "/");
                 });
                 console.log("data :" , data);
                 await productService.createNewProduct(data);
@@ -186,12 +161,7 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
 
 
         productController.updateChosenProduct = async (req:Request,res:Response)=>{
-      /*productControllerimi asinxron metodda shakllantirilgan , buning 2ta parametri bor ular 
-    req:Request va res:response (typeni ozimiz belgilab olganmiz bularni )
-
-    try catch error handling standardidan foydalandik maqsad errorni qolga 
-    olish agar error bolsa
-    */
+  
             try{
             console.log("Coming  updateChoseProduct Page!");
             const id = req.params.id;

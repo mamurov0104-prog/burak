@@ -1,17 +1,33 @@
-function changeNumberInArray(
-  index: number,
-  arr: number[],
-  newNumber: number
-): number[] {
-  
-  arr[index] = newNumber;
 
-  return arr;
+function removeDuplicate(str: string): string {
+  let result = "";
+
+  for (const char of str) {
+    if (!result.includes(char)) {
+      result += char;
+    }
+  }
+
+  return result;
 }
 
-const result = changeNumberInArray(1, [1, 3, 4, 5 , 6 , 7], 2);
+console.log(removeDuplicate("stringg")); 
+console.log(removeDuplicate("hojiakbarr")); 
+console.log(removeDuplicate("mamurovv")); 
+// function changeNumberInArray(
+//   index: number,
+//   arr: number[],
+//   newNumber: number
+// ): number[] {
+  
+//   arr[index] = newNumber;
 
-console.log(result);
+//   return arr;
+// }
+
+// const result = changeNumberInArray(1, [1, 3, 4, 5 , 6 , 7], 2);
+
+// console.log(result);
 
 
 // function celsiusToFahrenheit(celsius: number): number {
