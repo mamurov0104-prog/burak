@@ -1,19 +1,34 @@
-
-function removeDuplicate(str: string): string {
-  let result = "";
-
-  for (const char of str) {
-    if (!result.includes(char)) {
-      result += char;
-    }
-  }
-
-  return result;
+function capitalizeWords(text: string): string {
+  return text
+    .split(" ")
+    .map((word) => {
+      if (word.length <= 2) {
+        return word; // 1 yoki 2 harf bo'lsa o'zgartirmaymiz
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
 }
+const result = capitalizeWords("soat taxminan 00:10 boldi, uxlashga vaqt yoz vazifa bir dunyo! ");
+console.log(result);
 
-console.log(removeDuplicate("stringg")); 
-console.log(removeDuplicate("hojiakbarr")); 
-console.log(removeDuplicate("mamurovv")); 
+
+
+// function removeDuplicate(str: string): string {
+//   let result = "";
+
+//   for (const char of str) {
+//     if (!result.includes(char)) {
+//       result += char;
+//     }
+//   }
+
+//   return result;
+// }
+
+// console.log(removeDuplicate("stringg")); 
+// console.log(removeDuplicate("hojiakbarr")); 
+// console.log(removeDuplicate("mamurovv")); 
 // function changeNumberInArray(
 //   index: number,
 //   arr: number[],
