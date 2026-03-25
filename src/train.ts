@@ -1,7 +1,45 @@
-function capitalizeWords(input: string): string {
-  return input.toLowerCase().split(" ").join("_");
+function findDisappearedNumbers(arr: number[]): number[] {
+  const result: number[] = [];
+
+  //  eng katta sonni topamiz
+  let max = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      max = arr[i];
+    }
+  }
+
+  //  1 dan max gacha tekshiramiz
+  for (let i = 1; i <= max; i++) {
+
+    let found = false;
+
+    //  array ichidan qidiramiz (oddiy usul)
+    for (let j = 0; j < arr.length; j++) {
+      if (arr[j] === i) {
+        found = true;
+        break;
+      }
+    }
+
+    //  agar topilmasa — demak yo‘q son
+    if (!found) {
+      result.push(i);
+    }
+  }
+
+  return result;
 }
-console.log(capitalizeWords("burak loyasi tugatildi batamom!"));
+console.log(findDisappearedNumbers([1, 3, 4, 7]))
+console.log(findDisappearedNumbers([2, 5, 9, 7]))
+
+
+
+
+// function capitalizeWords(input: string): string {
+//   return input.toLowerCase().split(" ").join("_");
+// }
+// console.log(capitalizeWords("burak loyasi tugatildi batamom!"));
 
 
 // function capitalizeWords(text: string): string {
