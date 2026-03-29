@@ -263,7 +263,7 @@
   color: #ffffff;
 }
 
-.products-container #file {
+/* .products-container #file {
   opacity: 0;
   border: none;
   border-radius: 10px;
@@ -274,8 +274,14 @@
   top: 0px;
   height: 100%;
   cursor: pointer;
+} */
+.products-container .upload-img-box input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
-
 .products-container .operation-buttons {
   margin-top: 20px;
   display: flex;
