@@ -15,16 +15,16 @@ function reduceNestedArray(arr: (number | any[])[]): number {
 // Test
 console.log(reduceNestedArray([1, [1, 2, [4]]])); 
 
-// function delayHelloWorld(message: string): Promise<string> {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve(message);
-//     }, 3000); 
-//   });
-// }
-// delayHelloWorld("Hello MIT task").then((result) => {
-//   console.log(result); 
-// });
+function delayHelloWorld(message: string): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(message);
+    }, 3000); 
+  });
+}
+delayHelloWorld("Hello MIT task").then((result) => {
+  console.log(result); 
+});
 
 
 // function findDisappearedNumbers(arr: number[]): number[] {
