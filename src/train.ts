@@ -1,30 +1,47 @@
-function reduceNestedArray(arr: (number | any[])[]): number {
-  let sum = 0;
 
-  for (const item of arr) {
-    if (Array.isArray(item)) {
-      sum += reduceNestedArray(item); // recursive chaqiriq
-    } else {
-      sum += item;
+function printNumbers(): void {
+  let count = 1;
+
+  const interval = setInterval(() => {
+    console.log(count);
+    count++;
+
+    if (count > 5) {
+      clearInterval(interval);
     }
-  }
-
-  return sum;
+  }, 1000);
 }
 
-// Test
-console.log(reduceNestedArray([1, [1, 2, [4]]])); 
+// call
+printNumbers();
 
-function delayHelloWorld(message: string): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(message);
-    }, 3000); 
-  });
-}
-delayHelloWorld("Hello MIT task").then((result) => {
-  console.log(result); 
-});
+// function reduceNestedArray(arr: (number | any[])[]): number {
+//   let sum = 0;
+
+//   for (const item of arr) {
+//     if (Array.isArray(item)) {
+//       sum += reduceNestedArray(item); // recursive chaqiriq
+//     } else {
+//       sum += item;
+//     }
+//   }
+
+//   return sum;
+// }
+
+// // Test
+// console.log(reduceNestedArray([1, [1, 2, [4]]])); 
+
+// function delayHelloWorld(message: string): Promise<string> {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve(message);
+//     }, 3000); 
+//   });
+// }
+// delayHelloWorld("Hello MIT task").then((result) => {
+//   console.log(result); 
+// });
 
 
 // function findDisappearedNumbers(arr: number[]): number[] {
